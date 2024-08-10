@@ -1,77 +1,175 @@
-import React from 'react'; 
-import Image from 'next/image';
-import Link from 'next/link';
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const Header: React.FC = () => {
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLUListElement>(null);
+
+  const closeMenu = () => {
+    setShowMenu(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <header className="flex flex-wrap justify-between items-center p-3 md:p-5
-     bg-primary shadow-md text-white">
-      <Link href="/" passHref>
-        <span className="cursor-pointer shrink-0">
-          <Image src="/logo.svg" alt="Logo" width={60} height={60}  />
-        </span>
-      </Link>
-      <nav>
-        <ul className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6 mt-4 md:mt-0">
-          <li>
-            <Link href="/courses" passHref>
-              <span className="text-white hover:text-gray-400">Courses</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/tutorials" passHref>
-              <span className="text-white hover:text-gray-400">Tutorials</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/about" passHref>
-              <span className="text-white hover:text-gray-400">About Us</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/community" passHref>
-              <span className="text-white hover:text-gray-400">Community</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/contest" passHref>
-              <span className="text-white hover:text-gray-400">Contest</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/jobs" passHref>
-              <span className="text-white hover:text-gray-400">jobs</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/lab" passHref>
-              <span className="text-white hover:text-gray-400">lab</span>
-            </Link>
-          </li>
-          {/* <li>
-            <Link href="/quiz" passHref>
-              <span className="text-white hover:text-gray-400">Quiz</span>
-            </Link>
-          </li> */}
-          <li>
-            <Link href="/blogs" passHref>
-              <span className="text-white hover:text-gray-400">Blogs</span>
-            </Link>
-          </li>
-          {/* <li>
-            <Link href="/jobs" passHref>
-              <span className="text-white hover:text-gray-400">Contact</span>
-            </Link>
-          </li> */}
-        </ul>
-      </nav>
-      <div className="flex items-center space-x-4">
-        <Link href="/login" passHref>
-          <span className="text-white hover:text-gray-400">Login</span>
+    <header className="p-4 bg-primary shadow-md text-white">
+      <div className="flex justify-between h-16 mx-auto items-center">
+        <Link href="/" passHref>
+          <span className="cursor-pointer shrink-0">
+            <Image src="/logo.svg" alt="Logo" width={60} height={60} />
+          </span>
         </Link>
-        <Link href="/signup" passHref>
-          <span className="text-white hover:text-gray-400">Sign Up</span>
-        </Link>
+
+        <nav className="hideNav md:flex space-x-4">
+          <Link href="/courses" className="px-4 py-2  rounded">
+            Courses
+          </Link>
+          <Link href="/tutorials" className="px-4 py-2  rounded">
+            Tutorials
+          </Link>
+          <Link href="/about" className="px-4 py-2  rounded">
+            About Us
+          </Link>
+          <Link href="/community" className="px-4 py-2  rounded">
+            Community
+          </Link>
+          <Link href="/contest" className="px-4 py-2  rounded">
+            Contest
+          </Link>
+          <Link href="/jobs" className="px-4 py-2  rounded">
+            Jobs
+          </Link>
+          <Link href="/lab" className="px-4 py-2  rounded">
+            Lab
+          </Link>
+          <Link href="/blogs" className="px-4 py-2  rounded">
+            Blogs
+          </Link>
+        </nav>
+        <div className="hideNav md:flex space-x-4">
+          <Link href="/login" passHref>
+            <button className="px-4 py-2 rounded">Login</button>
+          </Link>
+          <Link href="/signup" passHref>
+            <button className="px-4 py-2 rounded">Sign up</button>
+          </Link>
+        </div>
+        <div className="relative hideIcon">
+          <label
+            htmlFor="menu-toggle"
+            className="cursor-pointer p-10"
+            onClick={() => setShowMenu(!showMenu)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="white"
+              viewBox="0 0 24 24"
+              stroke="white"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </label>
+          {showMenu && (
+            <ul
+              className="absolute right-0 menuBar bg-primary shadow-md rounded-lg w-48 flex-col"
+              id="menu"
+              tabIndex={0}
+              ref={menuRef}
+            >
+              <li>
+                <Link
+                  href="/courses"
+                  className="block px-4 py-2"
+                  onClick={closeMenu}
+                >
+                  Courses
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/tutorials"
+                  className="block px-4 py-2"
+                  onClick={closeMenu}
+                >
+                  Tutorials
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/about"
+                  className="block px-4 py-2"
+                  onClick={closeMenu}
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/community"
+                  className="block px-4 py-2"
+                  onClick={closeMenu}
+                >
+                  Community
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contest"
+                  className="block px-4 py-2"
+                  onClick={closeMenu}
+                >
+                  Contest
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/jobs"
+                  className="block px-4 py-2"
+                  onClick={closeMenu}
+                >
+                  Jobs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/lab"
+                  className="block px-4 py-2"
+                  onClick={closeMenu}
+                >
+                  Lab
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/blogs"
+                  className="block px-4 py-2"
+                  onClick={closeMenu}
+                >
+                  Blogs
+                </Link>
+              </li>
+            </ul>
+          )}
+        </div>
       </div>
     </header>
   );
