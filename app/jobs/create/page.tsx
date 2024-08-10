@@ -6,7 +6,6 @@ interface Job {
   description: string;
   company: string;
   location: string;
-  rating: number;
   applicants: number;
 }
 
