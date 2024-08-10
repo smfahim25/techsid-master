@@ -9,7 +9,7 @@ const Home: NextPage = () => {
     <div className="bg-white flex flex-col min-h-screen">
       <section className="bg-white text-gray-800">
         <div className="container mx-auto px-6 py-16 flex flex-col md:flex-row justify-between items-center gap-5">
-          <div className="flex-1">
+          <div className="flex-1 sm:mb-5">
             <h2 className="text-4xl font-bold mb-2">
               Your Gateway to a Dream Tech Career
             </h2>
