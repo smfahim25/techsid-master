@@ -9,6 +9,7 @@ interface Job {
   applicants: number;
 }
 
+
 interface AddJobFormProps {
   onSubmit: (job: Job) => void;
 }
