@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const menuRef = useRef<HTMLUListElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const closeMenu = () => {
     setShowMenu(false);
@@ -67,7 +67,7 @@ const Header: React.FC = () => {
             <button className="px-4 py-2 rounded">Sign up</button>
           </Link>
         </div>
-        <div className="relative hideIcon">
+        <div className="relative hideIcon" ref={menuRef}>
           <label
             htmlFor="menu-toggle"
             className="cursor-pointer p-10"
@@ -92,8 +92,6 @@ const Header: React.FC = () => {
             <ul
               className="absolute right-0 menuBar bg-primary shadow-md rounded-lg w-48 flex-col"
               id="menu"
-              tabIndex={0}
-              ref={menuRef}
             >
               <li>
                 <Link
@@ -165,6 +163,26 @@ const Header: React.FC = () => {
                   onClick={closeMenu}
                 >
                   Blogs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/login"
+                  passHref
+                  className="block px-4 py-2"
+                  onClick={closeMenu}
+                >
+                  <button className="">Login</button>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/signup"
+                  passHref
+                  className="block px-4 py-2"
+                  onClick={closeMenu}
+                >
+                  <button className="">Sign up</button>
                 </Link>
               </li>
             </ul>
