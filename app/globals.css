@@ -31,3 +31,17 @@ body {
     text-wrap: balance;
   }
 }
+@media screen and (min-width: 1024px) {
+  .hideIcon {
+    display: none;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .hideNav {
+    display: none;
+  }
+}
+.menuBar {
+  margin-top: 17px;
+  right: -15px;
+}

@@ -1,9 +1,11 @@
-"use client"
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+"use client";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { FaRegClock, FaRegUser } from "react-icons/fa";
 
 interface Post {
-  id:string,
+  id: string;
   title: string;
   author: string;
   date: string;
@@ -13,25 +15,27 @@ interface Post {
 const Blog = () => {
   const [posts, setPosts] = useState<Post[]>([
     {
-      id:"1",
+      id: "1",
       title: "How to Learn JavaScript",
       author: "Jane Doe",
       date: "June 21, 2024",
-      content: "JavaScript is a versatile language. Here are some tips on how to learn it effectively...",
+      content:
+        "JavaScript is a versatile language. Here are some tips on how to learn it effectively...",
     },
     {
-      id:"2",
+      id: "2",
       title: "My Journey into Web Development",
       author: "John Smith",
       date: "June 20, 2024",
-      content: "Web development has been a fulfilling career for me. Let me share my story...",
+      content:
+        "Web development has been a fulfilling career for me. Let me share my story...",
     },
   ]);
 
   const router = useRouter();
 
   const createPost = () => {
-    router.push("blogs/create")
+    router.push("blogs/create");
   };
 
   const viewPost = (id: string) => {
@@ -50,18 +54,38 @@ const Blog = () => {
         </button>
       </div>
 
-      <div id="postList">
+      <div id="postList" className="px-10">
         {posts.map((post, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 className="text-2xl font-bold mb-2">{post.title}</h2>
-            <p className="text-gray-600 text-sm mb-4">By {post.author} on {post.date}</p>
-            <p>{post.content.substring(0, 100)}...</p>
-            <button
-              onClick={() => viewPost(post.id)}
-              className="text-primary hover:underline"
-            >
-              View More
-            </button>
+          <div
+            key={index}
+            className="bg-white p-6 rounded-lg shadow-md mb-6 flex items-center"
+          >
+            <Image
+              src="/aims/1.jpg"
+              alt="aims"
+              className="rounded-lg"
+              width={180}
+              height={100}
+            />
+            <div className="ml-5">
+              <p className="text-gray-600 text-sm mb-4 flex items-center gap-2">
+                <span className="flex items-center gap-1">
+                  <FaRegClock />
+                  {post.date}
+                </span>
+                <span className="flex items-center gap-1">
+                  <FaRegUser /> {post.author}
+                </span>
+              </p>
+              <h2
+                className="text-2xl font-bold mb-2 cursor-pointer hover:text-[#2784fe]"
+                onClick={() => viewPost(post.id)}
+              >
+                {post.title}
+              </h2>
+
+              <p>{post.content.substring(0, 100)}...</p>
+            </div>
           </div>
         ))}
       </div>
