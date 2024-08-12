@@ -10,11 +10,11 @@ interface Job {
 }
 
 
-interface AddJobFormProps {
-  onSubmit: (job: Job) => void;
-}
+// interface AddJobFormProps {
+//   onSubmit: (job: Job) => void;
+// }
 
-const AddJobForm: React.FC<AddJobFormProps> = () => {
+const AddJobForm: React.FC= () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [company, setCompany] = useState("");
