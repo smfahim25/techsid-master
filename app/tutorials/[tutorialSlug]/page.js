@@ -1,56 +1,84 @@
 // pages/tutorials.tsx
-"use client"
+"use client";
 
-import Link from 'next/link';
-import React, { useState } from 'react';
+import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
 
 const tutorials = [
   {
-    title: 'Introduction',
-    introduction: 'This is something we still need to work on for a while.',
-    content: 'Introduction content...',
-    subtopics: ['What is JavaScript?', 'History of JavaScript', 'Examples'],
+    title: "Introduction",
+    introduction: "This is something we still need to work on for a while.",
+    content: "Introduction content...",
+    subtopics: ["What is JavaScript?", "History of JavaScript", "Examples"],
     example: 'console.log("Hello, JavaScript!");',
-    videoSrc: 'https://www.youtube.com/embed/your-video-id', // Replace with your video URL
-    exerciseLink: 'https://example.com/exercise-introduction', // Replace with your exercise URL
+    videoSrc: "https://www.youtube.com/embed/your-video-id", // Replace with your video URL
+    exerciseLink: "https://example.com/exercise-introduction", // Replace with your exercise URL
   },
   {
-    title: 'Getting Started',
-    introduction: 'Let\'s get started with JavaScript basics.',
-    content: 'Getting started content...',
-    subtopics: ['Installing Node.js', 'Setting up the environment', 'Your first script'],
+    title: "Getting Started",
+    introduction: "Let's get started with JavaScript basics.",
+    content: "Getting started content...",
+    subtopics: [
+      "Installing Node.js",
+      "Setting up the environment",
+      "Your first script",
+    ],
     example: 'const greeting = "Hello, World!";\nconsole.log(greeting);',
-    videoSrc: 'https://www.youtube.com/embed/your-video-id', // Replace with your video URL
-    exerciseLink: 'https://example.com/exercise-getting-started', // Replace with your exercise URL
+    videoSrc: "https://www.youtube.com/embed/your-video-id", // Replace with your video URL
+    exerciseLink: "https://example.com/exercise-getting-started", // Replace with your exercise URL
   },
   {
-    title: 'Installation steps',
-    introduction: 'Let\'s get started with JavaScript basics.',
-    content: 'Getting started content...',
-    subtopics: ['Installing Node.js', 'Setting up the environment', 'Your first script'],
+    title: "Installation steps",
+    introduction: "Let's get started with JavaScript basics.",
+    content: "Getting started content...",
+    subtopics: [
+      "Installing Node.js",
+      "Setting up the environment",
+      "Your first script",
+    ],
     example: 'const greeting = "Hello, World!";\nconsole.log(greeting);',
-    videoSrc: 'https://www.youtube.com/embed/your-video-id', // Replace with your video URL
-    exerciseLink: 'https://example.com/exercise-getting-started', // Replace with your exercise URL
+    videoSrc: "https://www.youtube.com/embed/your-video-id", // Replace with your video URL
+    exerciseLink: "https://example.com/exercise-getting-started", // Replace with your exercise URL
   },
   // Add more tutorial sections as needed
 ];
 
 const TutorialsPage = () => {
   const [selectedTutorialIndex, setSelectedTutorialIndex] = useState(0);
-
   const selectedTutorial = tutorials[selectedTutorialIndex];
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef();
+
+  const closeMenu = () => {
+    setShowMenu(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
-      <aside className="w-64 bg-gray-100 p-6">
+      <aside className=" bg-gray-100 p-6 hideNav">
         <h2 className="text-xl font-bold mb-4">Tutorial</h2>
         <ul>
           {tutorials.map((tutorial, index) => (
             <li key={index} className="mb-2">
-              <button 
+              <button
                 onClick={() => setSelectedTutorialIndex(index)}
-                className={`text-primary hover:underline ${selectedTutorialIndex === index ? 'font-bold' : ''}`}
+                className={`text-primary hover:underline ${
+                  selectedTutorialIndex === index ? "font-bold" : ""
+                }`}
               >
                 {tutorial.title}
               </button>
@@ -61,6 +89,46 @@ const TutorialsPage = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-5">
+        <div className="relative hideIcon w-10" ref={menuRef}>
+          <button
+            className="cursor-pointer"
+            onClick={() => setShowMenu(!showMenu)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="black"
+              viewBox="0 0 24 24"
+              stroke="black"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </button>
+          {showMenu && (
+            <ul
+              className="absolute left-0 right-0 bg-white shadow-md rounded-lg w-48 flex-col p-3"
+              id="menu"
+            >
+              {tutorials.map((tutorial, index) => (
+                <li key={index} className="mb-2">
+                  <button
+                    onClick={() => setSelectedTutorialIndex(index)}
+                    className={`text-primary hover:underline ${
+                      selectedTutorialIndex === index ? "font-bold" : ""
+                    }`}
+                  >
+                    {tutorial.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-2">{selectedTutorial.title}</h2>
           <p className="mb-4">{selectedTutorial.introduction}</p>
@@ -97,7 +165,8 @@ const TutorialsPage = () => {
             <a
               href={selectedTutorial.exerciseLink}
               className="bg-primary text-white py-2 px-4 rounded hover:bg-secondary"
-              target="_blank" rel="noopener noreferrer"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Start the Exercise
             </a>
@@ -106,16 +175,20 @@ const TutorialsPage = () => {
           {/* Navigation Buttons */}
           <div className="flex justify-between mt-8">
             {selectedTutorialIndex > 0 && (
-              <button 
-                onClick={() => setSelectedTutorialIndex(selectedTutorialIndex - 1)}
+              <button
+                onClick={() =>
+                  setSelectedTutorialIndex(selectedTutorialIndex - 1)
+                }
                 className="text-primary hover:underline"
               >
                 &lt; Previous: {tutorials[selectedTutorialIndex - 1].title}
               </button>
             )}
             {selectedTutorialIndex < tutorials.length - 1 && (
-              <button 
-                onClick={() => setSelectedTutorialIndex(selectedTutorialIndex + 1)}
+              <button
+                onClick={() =>
+                  setSelectedTutorialIndex(selectedTutorialIndex + 1)
+                }
                 className="text-primary hover:underline ml-auto"
               >
                 Next: {tutorials[selectedTutorialIndex + 1].title} &gt;
