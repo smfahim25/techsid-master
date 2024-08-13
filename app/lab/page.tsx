@@ -1,12 +1,22 @@
 "use client";
+import { Editor } from "@monaco-editor/react";
+import hljs from "highlight.js";
 import React, { useState } from "react";
 
 const CodeLabPage: React.FC = () => {
-  const [code, setCode] = useState<string>("");
+  const [code, setCode] = useState("");
+  const [language, setLanguage] = useState("plaintext");
   const [output, setOutput] = useState<string>("");
 
-  const handleCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setCode(event.target.value);
+  const detectLanguage = (value: any) => {
+    const detectedLanguage = hljs.highlightAuto(value).language;
+    return detectedLanguage || "plaintext"; // Fallback to plaintext
+  };
+
+  const handleEditorChange = (value: any) => {
+    setCode(value);
+    const detectedLanguage = detectLanguage(value);
+    setLanguage(detectedLanguage);
   };
 
   const executeCode = async (code: String) => code;
@@ -19,24 +29,31 @@ const CodeLabPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 h-[300px]">
-      <div className="flex flex-col md:flex-row">
-        <textarea
-          className="border rounded p-2 flex-1 mr-2"
-          value={code}
-          onChange={handleCodeChange}
-          placeholder="Write your code here..."
-        />
-        <div className="border rounded p-2 flex-1 ml-2">
-          <pre>{output}</pre>
+    <div className="container mx-auto h-screen">
+      <div className="flex flex-col md:flex-row mt-5">
+        <div className="h-[40vh] md:w-1/2">
+          <span>Code Editor:</span>
+          <Editor
+            language={language} // Dynamically set language
+            value={code}
+            onChange={handleEditorChange}
+            options={{ automaticLayout: true }}
+            defaultValue="// Start coding here..."
+          />
+          <button
+            onClick={handleRunCode}
+            className="mt-2 px-4 py-2 mb-5 bg-blue-500 text-white rounded"
+          >
+            Run code
+          </button>
+        </div>
+        <div className=" rounded p-2 flex-1 ml-2 h-[40vh] md:w-1/2 mt-20 md:mt-0">
+          <span>Output:</span>
+          <div className="border-2 bg-white">
+            <pre>{output}</pre>
+          </div>
         </div>
       </div>
-      <button
-        onClick={handleRunCode}
-        className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-      >
-        Run
-      </button>
     </div>
   );
 };
