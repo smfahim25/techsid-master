@@ -8,24 +8,62 @@ const CodeLabPage: React.FC = () => {
   const [language, setLanguage] = useState("plaintext");
   const [output, setOutput] = useState<string>("");
 
-  const detectLanguage = (value: any) => {
+  const detectLanguage = (value: string) => {
     const detectedLanguage = hljs.highlightAuto(value).language;
     return detectedLanguage || "plaintext"; // Fallback to plaintext
   };
 
-  const handleEditorChange = (value: any) => {
-    setCode(value);
-    const detectedLanguage = detectLanguage(value);
-    setLanguage(detectedLanguage);
+  const handleEditorChange = (value: string | undefined) => {
+    if (value !== undefined) {
+      setCode(value);
+      const detectedLanguage = detectLanguage(value);
+      setLanguage(detectedLanguage);
+    }
   };
 
-  const executeCode = async (code: String) => code;
-  const handleRunCode = async () => {
+  const executeCode = (code: string) => {
+    let result = "";
+    const originalConsoleLog = console.log;
+
     try {
-      const result = await executeCode(code);
+      // Override console.log to capture output
+      console.log = (...args: any[]) => {
+        result +=
+          args
+            .map((arg) =>
+              typeof arg === "object"
+                ? JSON.stringify(arg, null, 2) // Pretty print JSON objects
+                : String(arg)
+            )
+            .join(" ") + "\n";
+      };
+
+      // Wrapping the code in an IIFE to provide a local scope
+      const wrappedCode = `
+        (function() {
+          try {
+            ${code}
+          } catch (error) {
+            console.log("Error executing code:", error.message);
+          }
+        })();
+      `;
+
+      // Execute the code
+      eval(wrappedCode);
     } catch (error) {
-      setOutput("Error running the code");
+      result = `Error executing code: ${error}`;
+    } finally {
+      // Restore the original console.log
+      console.log = originalConsoleLog;
     }
+
+    return result;
+  };
+
+  const handleRunCode = () => {
+    const result = executeCode(code);
+    setOutput(result || "Execution completed without output.");
   };
 
   return (
@@ -34,7 +72,7 @@ const CodeLabPage: React.FC = () => {
         <div className="h-[40vh] md:w-1/2">
           <span>Code Editor:</span>
           <Editor
-            language={language} // Dynamically set language
+            language={language}
             value={code}
             onChange={handleEditorChange}
             options={{ automaticLayout: true }}
@@ -47,10 +85,10 @@ const CodeLabPage: React.FC = () => {
             Run code
           </button>
         </div>
-        <div className=" rounded p-2 flex-1 ml-2 h-[40vh] md:w-1/2 mt-20 md:mt-0">
+        <div className="rounded flex-1 ml-2 h-[40vh] md:w-1/2 mt-20 md:mt-0">
           <span>Output:</span>
-          <div className="border-2 bg-white">
-            <pre>{output}</pre>
+          <div className="border-2 bg-white  h-[40vh] p-4 overflow-x-auto">
+            <div dangerouslySetInnerHTML={{ __html: output }} />
           </div>
         </div>
       </div>
