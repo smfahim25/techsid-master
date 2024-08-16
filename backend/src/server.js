@@ -10,7 +10,7 @@ async function main() {
 
   try {
     server = app.listen(port, () => {
-      logger.info(`App is running on port - ${port}`);
+      console.log(`App is running on port - ${port}`);
     });
   } catch (error) {
     logger.error('Failed to start the server:', error);
@@ -34,7 +34,7 @@ process.on('uncaughtException', async (err) => {
 
 // Handle SIGTERM signal for graceful shutdown
 process.on('SIGTERM', async () => {
-  logger.info('SIGTERM signal received: closing HTTP server');
+  console.log('SIGTERM signal received: closing HTTP server');
   await shutdownServer(0); // Exit with success code
 });
 
@@ -42,7 +42,7 @@ process.on('SIGTERM', async () => {
 async function shutdownServer(exitCode) {
   if (server) {
     server.close(async () => {
-      logger.info('HTTP server closed');
+      console.log('HTTP server closed');
       await prisma.$disconnect();
       process.exit(exitCode);
     });
