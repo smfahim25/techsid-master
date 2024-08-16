@@ -1,7 +1,10 @@
 import httpStatus from 'http-status';
+import sendResponse from '../utils/sendResponse.js';
 const notFound = (req, res, next) => {
-  return res.status(httpStatus.NOT_FOUND).json({
-    message: 'Api Not Found',
+  sendResponse(res, {
+    statusCode: httpStatus.NOT_FOUND,
+    success: false,
+    message: 'API Not Found !!',
   });
 };
 
