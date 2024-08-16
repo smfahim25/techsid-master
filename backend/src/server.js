@@ -1,20 +1,19 @@
-import createApp from './app';
-import config from './app/config';
-import prisma from './app/utils/prismaClient';
+import createApp from './app.js';
+import config from './app/config/index.js';
+import prisma from './app/utils/prismaClient.js';
 
 let server;
 const port = config.PORT || 4000;
 
 async function main() {
   const app = createApp();
-
   try {
     server = app.listen(port, () => {
       console.log(`App is running on port - ${port}`);
     });
   } catch (error) {
     console.log('Failed to start the server:', error);
-    process.exit(1); // Exit with error code if server fails to start
+    // process.exit(1); // Exit with error code if server fails to start
   }
 }
 
