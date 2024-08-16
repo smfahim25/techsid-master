@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
 
 const Header: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -35,7 +35,7 @@ const Header: React.FC = () => {
 
         <nav className="hideNav md:flex space-x-4">
           <Link href="/courses" className="px-4 py-2  rounded">
-            Courses
+            C
           </Link>
           <Link href="/tutorials" className="px-4 py-2  rounded">
             Tutorials
