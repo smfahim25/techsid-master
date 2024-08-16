@@ -1,5 +1,3 @@
+import catchAsync from '../../../utils/catchAsync';
 
-
-const SignUp = catchAsync(async(req, res)=>{
-  
-})
+const SignUp = catchAsync(async (req, res) => {});
