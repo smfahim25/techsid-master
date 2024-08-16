@@ -5,7 +5,10 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon src/app.js",
+    "start": "nodemon src/server.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -19,7 +22,13 @@
     "http-status": "^1.7.4"
   },
   "devDependencies": {
+    "@eslint/js": "^9.9.0",
+    "eslint": "^9.9.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.9.0",
     "nodemon": "^3.1.4",
+    "prettier": "^3.3.3",
     "prisma": "^5.18.0"
   }
 }
