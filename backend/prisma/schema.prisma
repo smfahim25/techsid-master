@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,7 +8,110 @@ datasource db {
 }
 
 model User {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  email String  @unique
-  name  String?
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  name      String
+  password  String
+  role      UserRole @default(USER)
+  createAt  DateTime @default(now())
+  updatedAt DateTime @default(now())
+  Order     Order[]
+}
+
+model CourseCategory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  createAt  DateTime @default(now())
+  updatedAt DateTime @default(now())
+  Course    Course[]
+}
+
+model Course {
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  instructor  String
+  fees        Int?
+  status      Status         @default(ACTIVE)
+  catId       String         @db.ObjectId
+  img         String
+  rating      Int            @default(0)
+  language    String
+  content     String
+  level       Level
+  duration    Int
+  createAt    DateTime       @default(now())
+  updatedAt   DateTime       @default(now())
+  category    CourseCategory @relation(fields: [catId], references: [id])
+  Order       Order[]
+}
+
+model TutorialCategory {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String     @unique
+  createAt  DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+  tutorial  Tutorial[]
+}
+
+model Tutorial {
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  status      Status            @default(ACTIVE)
+  catId       String            @db.ObjectId
+  videoLink   String
+  img         String?
+  code        String
+  createAt    DateTime          @default(now())
+  updatedAt   DateTime          @default(now())
+  category    TutorialCategory? @relation(fields: [catId], references: [id])
+}
+
+model BlogCategory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  createAt  DateTime @default(now())
+  updatedAt DateTime @default(now())
+  blog      Blog[]
+}
+
+model Blog {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  status      Status        @default(ACTIVE)
+  catId       String        @db.ObjectId
+  videoLink   String
+  img         String?
+  code        String
+  createAt    DateTime      @default(now())
+  updatedAt   DateTime      @default(now())
+  category    BlogCategory? @relation(fields: [catId], references: [id])
+}
+
+model Order {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  courseId  String   @db.ObjectId
+  course    Course   @relation(fields: [courseId], references: [id])
+  createAt  DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
 }
