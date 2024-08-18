@@ -10,6 +10,7 @@ const SignUp = async (payload) => {
     name: payload.name,
   };
   const result = await prisma.user.create({ data: data });
+  // eslint-disable-next-line no-unused-vars
   const { password, ...rest } = result;
   return rest;
 };
