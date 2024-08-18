@@ -37,9 +37,9 @@ model Course {
   img         String
   rating      Int            @default(0)
   language    String
-  content     String
+  content     String?
   level       Level
-  duration    Int
+  duration    String
   createAt    DateTime       @default(now())
   updatedAt   DateTime       @default(now())
   category    CourseCategory @relation(fields: [catId], references: [id])
