@@ -13,5 +13,14 @@ router.post(
   },
   CourseController.CreateCourse,
 );
-
+router.patch(
+  '/edit-course/:id',
+  upload.single('file'),
+  (req, res, next) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
+  CourseController.EditCourse,
+);
+router.get('/', CourseController.GetAllCourses);
 export const CourseRoutes = router;
