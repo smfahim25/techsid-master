@@ -91,13 +91,15 @@ model Blog {
 }
 
 model Order {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  courseId  String   @db.ObjectId
-  course    Course   @relation(fields: [courseId], references: [id])
-  createAt  DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String        @db.ObjectId
+  user      User          @relation(fields: [userId], references: [id])
+  courseId  String        @db.ObjectId
+  status    PaymentStatus @default(UNPAID)
+  price     Int
+  course    Course        @relation(fields: [courseId], references: [id])
+  createAt  DateTime      @default(now())
+  updatedAt DateTime      @default(now())
 }
 
 enum UserRole {
@@ -108,6 +110,11 @@ enum UserRole {
 enum Status {
   ACTIVE
   INACTIVE
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
 }
 
 enum Level {
