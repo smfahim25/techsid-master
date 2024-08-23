@@ -21,7 +21,12 @@ const CreateOrder = async (payload) => {
 };
 
 const GetAllOrder = async () => {
-  const result = await prisma.order.findMany();
+  const result = await prisma.order.findMany({
+    include: {
+      course: true,
+      user: true,
+    },
+  });
   return result;
 };
 const ChangeOrderStatus = async (payload) => {
