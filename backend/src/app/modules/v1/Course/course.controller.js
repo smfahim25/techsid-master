@@ -12,8 +12,17 @@ const CreateCategory = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const GetAllCategory = catchAsync(async (req, res) => {
+  const result = await CourseService.GetAllCategory();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get All Categories Successfully!',
+    data: result,
+  });
+});
 const CreateCourse = catchAsync(async (req, res) => {
-  const result = await CourseService.CreateCourse(req.body);
+  const result = await CourseService.CreateCourse(req.file, req.body);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -22,4 +31,8 @@ const CreateCourse = catchAsync(async (req, res) => {
   });
 });
 
-export const CourseController = { CreateCourse, CreateCategory };
+export const CourseController = {
+  CreateCourse,
+  CreateCategory,
+  GetAllCategory,
+};
