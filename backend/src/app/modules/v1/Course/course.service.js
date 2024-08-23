@@ -52,7 +52,7 @@ const GetAllCategory = async () => {
 const GetAllCourses = async (query) => {
   const id = query.id;
   const result = await prisma.course.findMany({
-    where: { id: id, status: 'ACTIVE' },
+    where: { id: id },
     include: {
       category: true,
     },
