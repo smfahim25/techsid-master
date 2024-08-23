@@ -31,7 +31,7 @@ model Course {
   title       String
   description String
   instructor  String
-  fees        Int?
+  fees        Int
   status      Status         @default(ACTIVE)
   catId       String         @db.ObjectId
   img         String
