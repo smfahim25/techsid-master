@@ -5,27 +5,7 @@ import AppError from '../../../errors/AppError.js';
 import prisma from '../../../utils/prismaClient.js';
 import { createToken } from './auth.utils.js';
 const SignUp = async (payload) => {
-  if (payload.password && payload.password.trim() !== '') {
-    const bcryptPassword = bcrypt.hashSync(
-      payload.password,
-      Number(config.SALT),
-    );
-
-    const data = {
-      password: bcryptPassword,
-      email: payload.email,
-      name: payload.name,
-    };
-    const result = await prisma.user.create({ data: data });
-    // eslint-disable-next-line no-unused-vars
-    const { password, ...rest } = result;
-    return rest;
-  }
-
-  const bcryptPassword = bcrypt.hashSync(
-    config.JWT_ACCESS_SECRET,
-    Number(config.SALT),
-  );
+  const bcryptPassword = bcrypt.hashSync(payload.password, Number(config.SALT));
 
   const data = {
     password: bcryptPassword,
@@ -33,7 +13,6 @@ const SignUp = async (payload) => {
     name: payload.name,
   };
   const result = await prisma.user.create({ data: data });
-
   // eslint-disable-next-line no-unused-vars
   const { password, ...rest } = result;
   return rest;
@@ -50,10 +29,10 @@ const Login = async (payload) => {
   }
 
   //checking if the password is correct
-  if (payload?.password) {
-    if (!(await bcrypt.compare(payload?.password, user?.password)))
-      throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
-  }
+
+  if (!(await bcrypt.compare(payload?.password, user?.password)))
+    throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
+
   //create token and sent to the  client
   const jwtPayload = {
     email: user?.email,
@@ -69,7 +48,56 @@ const Login = async (payload) => {
   return { accessToken, user };
 };
 
+const SocialSignUpJWT = async (payload) => {
+  const getUser = await prisma.user.findUnique({
+    where: { email: payload.email },
+  });
+
+  if (!getUser) {
+    const jwtPayload = {
+      email: payload.email,
+      role: 'USER',
+    };
+
+    const accessToken = createToken(
+      jwtPayload,
+      config.JWT_ACCESS_SECRET,
+      config.JWT_ACCESS_EXPIRES_IN,
+    );
+    const bcryptPassword = bcrypt.hashSync(
+      config.JWT_ACCESS_SECRET,
+      Number(config.SALT),
+    );
+
+    const data = {
+      password: bcryptPassword,
+      email: payload.email,
+      name: payload.name,
+    };
+
+    const result = await prisma.user.create({ data: data });
+    // eslint-disable-next-line no-unused-vars
+    const { password, ...getUser } = result;
+    return { accessToken, getUser };
+  }
+
+  const jwtPayload = {
+    email: getUser?.email,
+    role: getUser.role,
+  };
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.JWT_ACCESS_SECRET,
+    config.JWT_ACCESS_EXPIRES_IN,
+  );
+
+  // const { password, ...rest } = result;
+  return { accessToken, getUser };
+};
+
 export const AuthService = {
   SignUp,
   Login,
+  SocialSignUpJWT,
 };
