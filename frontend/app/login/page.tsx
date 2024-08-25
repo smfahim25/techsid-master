@@ -1,39 +1,50 @@
 // types/LoginFormData.ts
-"use client"
+"use client";
 export type LoginFormData = {
-    email: string;
-    password: string;
-  };
-  
-  import React, { useState } from 'react';
-import SocialSignupButtons from '../signup/SocialSignupButtons';
-  
-  const LoginForm: React.FC = () => {
-    const [formData, setFormData] = useState<LoginFormData>({
-      email: '',
-      password: ''
+  email: string;
+  password: string;
+};
+
+import React, { useState } from "react";
+import SocialSignupButtons from "../signup/SocialSignupButtons";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/config/firebase";
+
+const LoginForm: React.FC = () => {
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
+  const [formData, setFormData] = useState<LoginFormData>({
+    email: "",
+    password: "",
+  });
+  console.log(user);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, checked, type } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
     });
-  
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value, checked, type } = e.target;
-      setFormData({
-        ...formData,
-        [name]: type === 'checkbox' ? checked : value,
-      });
-    };
-  
-    const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-      // Here you can handle the submission to your backend service
-      console.log(formData);
-    };
-  
-    return (
-      <div className="max-w-md mx-auto mt-10">
-        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h2 className="block text-gray-700 text-xl font-bold mb-6">Welcome back</h2>
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Here you can handle the submission to your backend service
+    console.log(formData);
+    signInWithEmailAndPassword(formData.email, formData.password);
+  };
+
+  return (
+    <div className="max-w-md mx-auto mt-10">
+      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <form onSubmit={handleSubmit} className="">
+          <h2 className="block text-gray-700 text-xl font-bold mb-6">
+            Welcome back
+          </h2>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="email"
+            >
               Email
             </label>
             <input
@@ -47,7 +58,10 @@ import SocialSignupButtons from '../signup/SocialSignupButtons';
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
               Password
             </label>
             <input
@@ -60,24 +74,27 @@ import SocialSignupButtons from '../signup/SocialSignupButtons';
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
-          <div style={{"textAlign":"center"}}>
+          <div style={{ textAlign: "center" }}>
             <button
               type="submit"
               className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4
-               rounded focus:outline-none focus:shadow-outline">
+               rounded focus:outline-none focus:shadow-outline"
+            >
               Login
             </button>
           </div>
           <p className="text-center text-sm mt-4">
-            New to Siid Tech? <a href="/signup" className="text-primary hover:underline">Sign Up</a>
+            New to Siid Tech?{" "}
+            <a href="/signup" className="text-primary hover:underline">
+              Sign Up
+            </a>
           </p>
-          <div className="mt-6">
-          <SocialSignupButtons />
-        </div>
+          <div className="mt-6"></div>
         </form>
+        <SocialSignupButtons />
       </div>
-    );
-  };
-  
-  export default LoginForm;
-  
+    </div>
+  );
+};
+
+export default LoginForm;
