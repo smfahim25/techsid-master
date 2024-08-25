@@ -31,6 +31,12 @@ const EditTutorial = async (params, file, payload) => {
   if (!catgory) {
     throw new AppError(httpStatus.NOT_FOUND, 'Catgory not found!');
   }
+  const tutorial = await prisma.tutorial.findFirst({
+    where: { id: params.id },
+  });
+  if (!tutorial) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Tutorial not found!');
+  }
   // Upload main blog image if it exists
   if (file) {
     const imageName = `${payload?.title}-main`;
