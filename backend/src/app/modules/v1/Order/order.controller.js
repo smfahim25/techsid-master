@@ -26,7 +26,7 @@ const ChangeOrderStatus = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Get All Orders Successfully!',
+    message: 'Change Order Status Successfully!',
     data: result,
   });
 });
