@@ -13,7 +13,9 @@ const EditUser = async (params, payload) => {
     where: { id: params.id },
     data: payload,
   });
-  return result;
+  // eslint-disable-next-line no-unused-vars
+  const { password, ...rest } = result;
+  return rest;
 };
 const GetAllUsers = async () => {
   const result = await prisma.user.findMany();
