@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { handleGithub, handleGoogleSignup } from "./utils"; // Assuming AppDispatch is exported from your store configuration
+import { toast } from "react-toastify";
 
 type Provider = "Google" | "GitHub"; // Define the type for provider
 
@@ -17,10 +18,9 @@ const SocialSignupButtons: React.FC = () => {
     console.log(`Signup with ${provider}`);
     try {
       const res = await handleGoogleSignup();
-      // console.log(res);
 
       // Updating the auth state
-      // dispatch(login(res));
+      dispatch(login(res));
 
       // Route the user
       router.push("/");
@@ -36,12 +36,12 @@ const SocialSignupButtons: React.FC = () => {
       // console.log(res);
 
       // Updating the auth state
-      // dispatch(login(res));
+      dispatch(login(res));
 
       // Route the user
       router.push("/");
     } catch (error) {
-      console.log(error, "error");
+      toast.error("unsuccessfull signup");
     }
     // Here you would integrate with the respective provider's sign-in API.
   };

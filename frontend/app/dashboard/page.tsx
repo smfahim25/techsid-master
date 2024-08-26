@@ -1,5 +1,8 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { ReactNode, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 // Define types for your data
 type DashboardWidgetProps = {
@@ -70,8 +73,37 @@ const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   );
 };
 
+interface User {
+  data: {
+    id: string;
+    name: string;
+    role: string;
+    email: string;
+    accessToken: string; // Assuming the access token is part of the user data
+    user: {
+      role: string;
+    };
+  };
+}
+
+// Define the RootState interface
+interface RootState {
+  auth: {
+    user: User;
+  };
+}
 // The main dashboard layout component
 const DashboardLayout: React.FC = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const router = useRouter();
+  useEffect(() => {
+    if (user?.data?.user?.role !== "ADMIN") {
+      router.push("/");
+    }
+    if (!user) {
+      router.push("/login");
+    }
+  }, [user, router]);
   return (
     <div className="flex min-h-screen bg-gray-100">
       <main className="flex-1 py-4 px-2">

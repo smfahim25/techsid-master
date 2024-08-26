@@ -17,17 +17,17 @@ export const handleGoogleSignup = async () => {
     }
     console.log(data);
 
-    // const reqBody = {
-    //   email: data?._tokenResponse?.email,
-    //   // isEmailVerified: data?._tokenResponse?.emailVerified,
-    //   // source: "google",
-    //   profileImg: data?._tokenResponse?.photoUrl,
-    //   name: data?._tokenResponse?.firstName,
-    //   // lastName: data?._tokenResponse?.lastName,
-    // };
+    const reqBody = {
+      email: data?._tokenResponse?.email,
+      // isEmailVerified: data?._tokenResponse?.emailVerified,
+      // source: "google",
+      // profileImg: data?._tokenResponse?.photoUrl,
+      name: data?._tokenResponse?.firstName,
+      // lastName: data?._tokenResponse?.lastName,
+    };
 
-    // const res = await apiServicesInstance.signup(reqBody);
-    // return data;
+    const res = await apiServicesInstance.signup(reqBody);
+    return res.data;
   } catch (error) {
     console.error(error);
     throw error;
@@ -42,17 +42,17 @@ export const handleGithub = async () => {
     }
     console.log(data);
 
-    // const reqBody = {
-    //   email: data?._tokenResponse?.email,
-    //   // isEmailVerified: data?._tokenResponse?.emailVerified,
-    //   // source: "google",
-    //   profileImg: data?._tokenResponse?.photoUrl,
-    //   name: data?._tokenResponse?.firstName,
-    //   // lastName: data?._tokenResponse?.lastName,
-    // };
+    const reqBody = {
+      email: data?._tokenResponse?.email,
+      // isEmailVerified: data?._tokenResponse?.emailVerified,
+      // source: "google",
+      // profileImg: data?._tokenResponse?.photoUrl,
+      name: data?._tokenResponse?.firstName,
+      // lastName: data?._tokenResponse?.lastName,
+    };
 
-    // const res = await apiServicesInstance.signup(reqBody);
-    // return data;
+    const res = await apiServicesInstance.signup(reqBody);
+    return res.data;
   } catch (error) {
     console.error(error);
     throw error;

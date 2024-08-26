@@ -17,6 +17,10 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+img,
+video {
+  height: 100%;
+}
 
 @layer utilities {
   .text-balance {
@@ -37,3 +41,31 @@ body {
   margin-top: 17px;
   right: -15px;
 }
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  line-height: 10px;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 7px;
+}
+h3 {
+  font-size: 1em;
+  font-weight: bold;
+  line-height: 7px;
+}
+h4 {
+  font-size: 0.75em;
+  font-weight: bold;
+  line-height: 7px;
+}
+h5 {
+  font-size: 0.5em;
+  font-weight: bold;
+  line-height: 7px;
+}
+
+/* Add more for h3, h4, etc., if needed */

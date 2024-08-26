@@ -1,6 +1,6 @@
 // components/CoursesSection.tsx
-
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import ContentCard from "./ContentCard";
 
 // Updated course data with specific courses
@@ -75,23 +75,66 @@ const courses = [
     imageSrc: "/courses/solidity.png",
   },
 ];
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  duration: string; // Assuming duration is a string representing time, e.g., "8 hours"
+  fees: number;
+  img: string; // URL of the image
+  instructor: string;
+  language: string;
+  level: "BEGINNER" | "INTERMEDIATE" | "ADVANCED"; // Enum-like string literals for levels
+  rating: number; // Assuming rating is a number, possibly out of 5
+  status: "ACTIVE" | "INACTIVE"; // Enum-like string literals for status
+  createAt: string; // ISO 8601 date string
+  updatedAt: string; // ISO 8601 date string
+}
 
 const CoursesSection: React.FC = () => {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://techsiid-master.onrender.com/api/v1/courses"
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const result = await response.json();
+        setData(result?.data);
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
   return (
     <section className="py-16">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">
           Discover the Variety of Courses Here
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {courses.map((course) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-10">
+          {data?.map((course: Course) => (
             <ContentCard
               key={course.id}
+              id={course.id}
               title={course.title}
               description={course.description}
               rating={course.rating}
-              reviewCount={course.reviewCount}
-              imageSrc={course.imageSrc}
+              reviewCount={course.rating}
+              imageSrc={course.img}
             />
           ))}
         </div>

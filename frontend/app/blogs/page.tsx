@@ -1,4 +1,6 @@
 "use client";
+import Footer from "@/layout/Footer/Footer";
+import Header from "@/layout/Header/Header";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -43,52 +45,58 @@ const Blog = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Blog</h1>
-        <button
-          onClick={createPost}
-          className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-secondary"
-        >
-          Create Post
-        </button>
-      </div>
-
-      <div id="postList" className="px-10">
-        {posts.map((post, index) => (
-          <div
-            key={index}
-            className="bg-white p-6 rounded-lg shadow-md mb-6 flex items-center"
-          >
-            <Image
-              src="/aims/1.jpg"
-              alt="aims"
-              className="rounded-lg"
-              width={180}
-              height={100}
-            />
-            <div className="ml-5">
-              <p className="text-gray-600 text-sm mb-4 flex items-center gap-2">
-                <span className="flex items-center gap-1">
-                  <FaRegClock />
-                  {post.date}
-                </span>
-                <span className="flex items-center gap-1">
-                  <FaRegUser /> {post.author}
-                </span>
-              </p>
-              <h2
-                className="text-2xl font-bold mb-2 cursor-pointer hover:text-[#2784fe]"
-                onClick={() => viewPost(post.id)}
-              >
-                {post.title}
-              </h2>
-
-              <p>{post.content.substring(0, 100)}...</p>
-            </div>
+    <div>
+      <Header />
+      <main>
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold">Blog</h1>
+            <button
+              onClick={createPost}
+              className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-secondary"
+            >
+              Create Post
+            </button>
           </div>
-        ))}
-      </div>
+
+          <div id="postList" className="px-10">
+            {posts.map((post, index) => (
+              <div
+                key={index}
+                className="bg-white p-6 rounded-lg shadow-md mb-6 flex items-center"
+              >
+                <Image
+                  src="/aims/1.jpg"
+                  alt="aims"
+                  className="rounded-lg"
+                  width={180}
+                  height={100}
+                />
+                <div className="ml-5">
+                  <p className="text-gray-600 text-sm mb-4 flex items-center gap-2">
+                    <span className="flex items-center gap-1">
+                      <FaRegClock />
+                      {post.date}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <FaRegUser /> {post.author}
+                    </span>
+                  </p>
+                  <h2
+                    className="text-2xl font-bold mb-2 cursor-pointer hover:text-[#2784fe]"
+                    onClick={() => viewPost(post.id)}
+                  >
+                    {post.title}
+                  </h2>
+
+                  <p>{post.content.substring(0, 100)}...</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 };

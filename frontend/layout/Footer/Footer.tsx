@@ -5,8 +5,8 @@ import Link from "next/link";
 const Footer: React.FC = () => {
   return (
     <footer className="bg-primary text-white p-10">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
-        <div className="flex flex-col items-start">
+      <div className="max-w-7xl grid grid-cols-2 md:grid-cols-4 gap-8 items-center mx-auto justify-items-center text-center py-5">
+        <div className="flex flex-col items-center">
           <Image
             src="/logo.svg"
             alt="SIID Tech Logo"

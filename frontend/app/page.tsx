@@ -1,15 +1,18 @@
 // pages/index.tsx
 import CoursesSection from "@/component/Courses";
 import Hero from "@/component/home/Hero";
+import Footer from "@/layout/Footer/Footer";
+import Header from "@/layout/Header/Header";
 import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-const Home: NextPage = () => {
+const Page = () => {
   return (
     <div className="bg-white flex flex-col min-h-screen">
-      <Hero />
+      <Header />
       <main className="flex-grow">
+        <Hero />
         <section className="text-center py-16">
           <h1 className="text-4xl font-bold text-gray-800 mb-6">
             Master New Skills with Our Courses
@@ -33,6 +36,7 @@ const Home: NextPage = () => {
                     alt="Certifications"
                     width={80}
                     height={80}
+                    priority
                   />
                 </div>
                 <h3 className="text-xl font-semibold">Certifications</h3>
@@ -49,6 +53,7 @@ const Home: NextPage = () => {
                     alt="Community Support"
                     width={80}
                     height={80}
+                    priority
                   />
                 </div>
                 <h3 className="text-xl font-semibold">
@@ -67,6 +72,7 @@ const Home: NextPage = () => {
                     alt="Internships"
                     width={80}
                     height={80}
+                    priority
                   />
                 </div>
                 <h3 className="text-xl font-semibold">
@@ -85,6 +91,7 @@ const Home: NextPage = () => {
                     alt="24/7 Support"
                     width={80}
                     height={80}
+                    priority
                   />
                 </div>
                 <h3 className="text-xl font-semibold">24/7 Support</h3>
@@ -101,6 +108,7 @@ const Home: NextPage = () => {
                     alt="Industry Experts"
                     width={80}
                     height={80}
+                    priority
                   />
                 </div>
                 <h3 className="text-xl font-semibold">Mentorship by Experts</h3>
@@ -117,6 +125,7 @@ const Home: NextPage = () => {
                     alt="Job Guarantee"
                     width={80}
                     height={80}
+                    priority
                   />
                 </div>
                 <h3 className="text-xl font-semibold">Job Guarantee</h3>
@@ -128,10 +137,11 @@ const Home: NextPage = () => {
             </div>
           </div>
         </section>
+        <CoursesSection />
       </main>
-      <CoursesSection />
+      <Footer />
     </div>
   );
 };
 
-export default Home;
+export default Page;

@@ -1,4 +1,6 @@
 "use client";
+import Footer from "@/layout/Footer/Footer";
+import Header from "@/layout/Header/Header";
 import { Editor } from "@monaco-editor/react";
 import hljs from "highlight.js";
 import React, { useState } from "react";
@@ -67,31 +69,37 @@ const CodeLabPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto h-screen">
-      <div className="flex flex-col md:flex-row mt-5">
-        <div className="h-[40vh] md:w-1/2">
-          <span>Code Editor:</span>
-          <Editor
-            language={language}
-            value={code}
-            onChange={handleEditorChange}
-            options={{ automaticLayout: true }}
-            defaultValue="// Start coding here..."
-          />
-          <button
-            onClick={handleRunCode}
-            className="mt-2 px-4 py-2 mb-5 bg-blue-500 text-white rounded"
-          >
-            Run code
-          </button>
-        </div>
-        <div className="rounded flex-1 ml-2 h-[40vh] md:w-1/2 mt-20 md:mt-0">
-          <span>Output:</span>
-          <div className="border-2 bg-white  h-[40vh] p-4 overflow-x-auto">
-            <div dangerouslySetInnerHTML={{ __html: output }} />
+    <div>
+      <Header />
+      <main className="min-h-screen">
+        <div className="container mx-auto h-screen">
+          <div className="flex flex-col md:flex-row mt-5">
+            <div className="h-[40vh] md:w-1/2">
+              <span>Code Editor:</span>
+              <Editor
+                language={language}
+                value={code}
+                onChange={handleEditorChange}
+                options={{ automaticLayout: true }}
+                defaultValue="// Start coding here..."
+              />
+              <button
+                onClick={handleRunCode}
+                className="mt-2 px-4 py-2 mb-5 bg-blue-500 text-white rounded"
+              >
+                Run code
+              </button>
+            </div>
+            <div className="rounded flex-1 ml-2 h-[40vh] md:w-1/2 mt-20 md:mt-0">
+              <span>Output:</span>
+              <div className="border-2 bg-white  h-[40vh] p-4 overflow-x-auto">
+                <div dangerouslySetInnerHTML={{ __html: output }} />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 };

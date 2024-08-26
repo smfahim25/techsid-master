@@ -1,3 +1,5 @@
+import Footer from "@/layout/Footer/Footer";
+import Header from "@/layout/Header/Header";
 import Image from "next/image";
 
 // Types for the data
@@ -99,41 +101,50 @@ const RankingCard: React.FC<Ranking> = ({ name, points, image }) => {
 // ContestPage component
 const ContestPage: React.FC = () => {
   return (
-    <div className="container mx-auto p-8">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="col-span-1">
-          <h2 className="text-2xl font-bold mb-4">Contest</h2>
-          <nav>
-            <ul className="flex flex-col">
-              {contests.map((contest) => (
-                <li key={contest.id}>
-                  <a href="#" className="text-lg text-blue-500 hover:underline">
-                    {contest.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-        <div className="col-span-3">
-          <section>
-            <h3 className="text-xl font-bold mb-4">Featured Contests</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {contests
-                .filter((contest) => contest.status === "upcoming")
-                .map((contest) => (
-                  <ContestCard key={contest.id} {...contest} />
-                ))}
+    <div>
+      <Header />
+      <main>
+        <div className="container mx-auto p-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="col-span-1">
+              <h2 className="text-2xl font-bold mb-4">Contest</h2>
+              <nav>
+                <ul className="flex flex-col">
+                  {contests.map((contest) => (
+                    <li key={contest.id}>
+                      <a
+                        href="#"
+                        className="text-lg text-blue-500 hover:underline"
+                      >
+                        {contest.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
             </div>
-          </section>
-          <section className="mt-8">
-            <h3 className="text-xl font-bold mb-4">Global Ranking</h3>
-            {rankings.map((ranking) => (
-              <RankingCard key={ranking.id} {...ranking} />
-            ))}
-          </section>
+            <div className="col-span-3">
+              <section>
+                <h3 className="text-xl font-bold mb-4">Featured Contests</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {contests
+                    .filter((contest) => contest.status === "upcoming")
+                    .map((contest) => (
+                      <ContestCard key={contest.id} {...contest} />
+                    ))}
+                </div>
+              </section>
+              <section className="mt-8">
+                <h3 className="text-xl font-bold mb-4">Global Ranking</h3>
+                {rankings.map((ranking) => (
+                  <RankingCard key={ranking.id} {...ranking} />
+                ))}
+              </section>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 };

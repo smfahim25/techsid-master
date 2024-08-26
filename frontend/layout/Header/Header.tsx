@@ -1,9 +1,29 @@
 "use client";
+import { auth } from "@/config/firebase";
+import { logout } from "@/store/auth/slice";
+import { signOut } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useDispatch, useSelector } from "react-redux";
+
+interface User {
+  id: string;
+  name: string;
+  // Add other user properties here
+}
+
+interface RootState {
+  auth: {
+    user: User | null;
+  };
+}
 
 const Header: React.FC = () => {
+  const normal = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch();
+
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -59,14 +79,28 @@ const Header: React.FC = () => {
             Blogs
           </Link>
         </nav>
-        <div className="hideNav md:flex space-x-4">
-          <Link href="/login" passHref>
-            <button className="px-4 py-2 rounded">Login</button>
-          </Link>
-          <Link href="/signup" passHref>
-            <button className="px-4 py-2 rounded">Sign up</button>
-          </Link>
-        </div>
+        {!normal ? (
+          <div className="hideNav md:flex space-x-4">
+            <Link href="/login" passHref>
+              <button className="px-4 py-2 rounded">Login</button>
+            </Link>
+            <Link href="/signup" passHref>
+              <button className="px-4 py-2 rounded">Sign up</button>
+            </Link>
+          </div>
+        ) : (
+          <div className="hideNav md:flex space-x-4">
+            <button
+              className="px-4 py-2 rounded"
+              onClick={() => {
+                dispatch(logout());
+                signOut(auth);
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        )}
         <div className="relative hideIcon" ref={menuRef}>
           <label
             htmlFor="menu-toggle"
@@ -165,26 +199,43 @@ const Header: React.FC = () => {
                   Blogs
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/login"
-                  passHref
-                  className="block px-4 py-2"
-                  onClick={closeMenu}
-                >
-                  <button className="">Login</button>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/signup"
-                  passHref
-                  className="block px-4 py-2"
-                  onClick={closeMenu}
-                >
-                  <button className="">Sign up</button>
-                </Link>
-              </li>
+              {!normal && (
+                <li>
+                  <Link
+                    href="/login"
+                    passHref
+                    className="block px-4 py-2"
+                    onClick={closeMenu}
+                  >
+                    <button className="">Login</button>
+                  </Link>
+                </li>
+              )}
+              {!normal && (
+                <li>
+                  <Link
+                    href="/signup"
+                    passHref
+                    className="block px-4 py-2"
+                    onClick={closeMenu}
+                  >
+                    <button className="">Sign up</button>
+                  </Link>
+                </li>
+              )}
+              {normal && (
+                <li>
+                  <button
+                    className="block px-4 py-2"
+                    onClick={() => {
+                      dispatch(logout());
+                      signOut(auth);
+                    }}
+                  >
+                    Logout
+                  </button>
+                </li>
+              )}
             </ul>
           )}
         </div>

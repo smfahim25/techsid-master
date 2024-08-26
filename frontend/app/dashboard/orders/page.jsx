@@ -2,41 +2,18 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-interface userData {
-  id: string;
-  name: string;
-  role: string;
-  email: string;
-}
-interface User {
-  data: {
-    id: string;
-    name: string;
-    role: string;
-    email: string;
-    accessToken: string; // Assuming the access token is part of the user data
-    // Add other user properties here
-  };
-}
 
-// Define the RootState interface
-interface RootState {
-  auth: {
-    user: User | null;
-  };
-}
-
-const UserTable: React.FC = () => {
-  const user = useSelector((state: RootState) => state.auth.user);
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+const UserTable = () => {
+  const user = useSelector((state) => state.auth.user);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://techsiid-master.onrender.com/api/v1/users",
+          "https://techsiid-master.onrender.com/api/v1//orders",
           {
             method: "GET", // or 'POST', 'PUT', etc.
             headers: {
@@ -53,7 +30,7 @@ const UserTable: React.FC = () => {
 
         const result = await response.json();
         setData(result?.data);
-      } catch (error: any) {
+      } catch (error) {
         setError(error.message);
       } finally {
         setLoading(false);
@@ -65,6 +42,20 @@ const UserTable: React.FC = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+  const formatDate = (isoDateString) => {
+    const date = new Date(isoDateString);
+
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    };
+
+    return date.toLocaleString("en-US", options);
+  };
   return (
     <table className="min-w-full leading-normal">
       <thead>
@@ -73,44 +64,52 @@ const UserTable: React.FC = () => {
             User
           </th>
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Role
+            Course
           </th>
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Actions
+            Order Created
+          </th>
+          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            Status
           </th>
         </tr>
       </thead>
       <tbody>
-        {data.map((user: userData) => (
-          <tr key={user.id}>
+        {data.map((order) => (
+          <tr key={order.id}>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <div className="flex items-center">
                 <div className="flex-shrink-0 w-10 h-10">
                   <Image
                     className="w-full h-full rounded-full"
                     src="/aims/1.jpg"
-                    alt={user.name}
+                    alt={order?.user.name}
                     width={80}
                     height={80}
                   />
                 </div>
                 <div className="ml-3">
                   <p className="text-gray-900 whitespace-no-wrap">
-                    {user.name}
+                    {order?.user.name}
                   </p>
                   <p className="text-gray-600 whitespace-no-wrap">
-                    {user.email}
+                    {order?.user.email}
                   </p>
                 </div>
               </div>
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <p className="text-gray-900 whitespace-no-wrap">{user.role}</p>
+              <p className="text-gray-900 whitespace-no-wrap">
+                {order?.course.title}
+              </p>
             </td>
-            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-              <button className="text-primary hover:text-secondary">
-                Edit
-              </button>
+            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              <p className="text-gray-900 whitespace-no-wrap">
+                {formatDate(order?.course.createAt)}
+              </p>
+            </td>
+            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+              <p className="text-gray-900 whitespace-no-wrap">{order.status}</p>
             </td>
           </tr>
         ))}
@@ -119,12 +118,12 @@ const UserTable: React.FC = () => {
   );
 };
 
-const UserManagementPage: React.FC = () => {
+const Page = () => {
   return (
     <div className="container mx-auto max-w-3xl overflow-y-auto min-h-screen">
       <div className="py-8">
         <div className="flex flex-col md:flex-row mb-1 sm:mb-0 justify-between w-full">
-          <h2 className="text-2xl leading-tight mb-5">User Management</h2>
+          <h2 className="text-2xl leading-tight mb-5">Order Management</h2>
           <div className="text-end">
             <form className="flex w-full max-w-sm space-x-3">
               <div className="">
@@ -152,4 +151,4 @@ const UserManagementPage: React.FC = () => {
   );
 };
 
-export default UserManagementPage;
+export default Page;

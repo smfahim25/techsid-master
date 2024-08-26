@@ -2,8 +2,7 @@
 import axios from "axios";
 
 // Define the base URI for the API
-export const API_BASE_URI =
-  "https://landing-pages-shoshin-tech.onrender.com/api/v1";
+export const API_BASE_URI = "https://techsiid-master.onrender.com/api/v1";
 
 // Create an axios instance with default settings
 const apiInstance = axios.create({
@@ -19,7 +18,7 @@ const apiInstance = axios.create({
 class ApiServices {
   // Auth
   signup(data, params) {
-    return apiInstance.post(`/auth/signup`, data, { params });
+    return apiInstance.post(`/auth/social-auth`, data);
   }
 
   // Add other service methods as needed, for example:

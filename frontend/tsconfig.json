@@ -28,9 +28,13 @@
     ".next/types/**/*.ts",
     "store/index.tj",
     "store/auth/slice.js",
-    "app/layout.js",
+    "app/layout.tsx",
     "config/firebase.js",
-    "app/signup/SocialSignupButtons.tsx"
+    "app/signup/SocialSignupButtons.tsx",
+    "app/courses/create/page.jsx",
+    "app/courses/edit/page.jsx",
+    "app/tutorials/createTu/page.jsx",
+    "app/courses/courseDetails/page.jsx"
   ],
   "exclude": ["node_modules"]
 }

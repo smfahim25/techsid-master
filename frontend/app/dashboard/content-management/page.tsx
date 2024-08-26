@@ -1,107 +1,51 @@
-import React from "react";
-
+"use client";
+import { API_BASE_URI } from "@/data/apiservice";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+type category = {
+  name: string;
+};
 type ContentItem = {
   id: number;
   title: string;
-  subTopic: string;
-  category: string;
+  category: category;
   status: string;
-  publishedDate: string;
+  createAt: string;
 };
 
-const contentItems: ContentItem[] = [
-  {
-    id: 1,
-    title: "Getting Started with React",
-    subTopic: "React Router",
-    category: "Web Development",
-    status: "Published",
-    publishedDate: "2021-01-20",
-  },
-  {
-    id: 2,
-    title: "Advanced Node.js Techniques",
-    subTopic: "Streams and Performance",
-    category: "Backend Development",
-    status: "In Review",
-    publishedDate: "2021-02-15",
-  },
-  {
-    id: 3,
-    title: "Understanding Asynchronous JavaScript",
-    subTopic: "Promises and Async/Await",
-    category: "JavaScript",
-    status: "Published",
-    publishedDate: "2021-03-05",
-  },
-  {
-    id: 4,
-    title: "Introduction to TypeScript",
-    subTopic: "Types and Interfaces",
-    category: "Web Development",
-    status: "Published",
-    publishedDate: "2021-04-12",
-  },
-  {
-    id: 5,
-    title: "Building Applications with Vue.js",
-    subTopic: "Vue CLI and Lifecycle Hooks",
-    category: "Frontend Development",
-    status: "Draft",
-    publishedDate: "2021-05-21",
-  },
-  {
-    id: 6,
-    title: "Responsive Web Design Fundamentals",
-    subTopic: "Media Queries and Flexbox",
-    category: "Design",
-    status: "Published",
-    publishedDate: "2021-06-30",
-  },
-  {
-    id: 7,
-    title: "Python for Data Science",
-    subTopic: "Data Manipulation with Pandas",
-    category: "Data Science",
-    status: "In Review",
-    publishedDate: "2021-07-18",
-  },
-  {
-    id: 8,
-    title: "Machine Learning with TensorFlow",
-    subTopic: "Neural Networks Basics",
-    category: "AI/ML",
-    status: "Published",
-    publishedDate: "2021-08-05",
-  },
-  {
-    id: 9,
-    title: "DevOps Essentials",
-    subTopic: "CI/CD with Jenkins",
-    category: "DevOps",
-    status: "Published",
-    publishedDate: "2021-09-10",
-  },
-  {
-    id: 10,
-    title: "Database Management with SQL",
-    subTopic: "Advanced Queries",
-    category: "Database",
-    status: "Published",
-    publishedDate: "2021-10-15",
-  },
-];
-
 const ContentTable: React.FC = () => {
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URI}/tutorials`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const result = await response.json();
+        console.log(result);
+        setData(result?.data); // Adjust this according to your API response
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <table className="min-w-full leading-normal">
       <thead>
         <tr>
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
             Title
-          </th>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Sub Topic
           </th>
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
             Category
@@ -118,27 +62,26 @@ const ContentTable: React.FC = () => {
         </tr>
       </thead>
       <tbody>
-        {contentItems.map((item) => (
+        {data.map((item: ContentItem) => (
           <tr key={item.id}>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               {item.title}
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              {item.subTopic}
-            </td>
-            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              {item.category}
+              {item.category?.name}
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               {item.status}
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              {item.publishedDate}
+              {item.createAt}
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-              <button className="text-primary hover:text-secondary">
-                Edit
-              </button>
+              <Link href={`/tutorials/editTu?id=${item?.id}`}>
+                <button className="text-primary hover:text-secondary">
+                  Edit
+                </button>
+              </Link>
               <button className="text-red-600 hover:text-red-900 ml-3">
                 Delete
               </button>
@@ -152,10 +95,34 @@ const ContentTable: React.FC = () => {
 
 const ContentManagementPage: React.FC = () => {
   return (
-    <div className="container mx-auto max-w-3xl overflow-y-auto">
+    <div className="container mx-auto max-w-3xl overflow-y-auto min-h-screen">
       <div className="py-8">
-        <div className="flex flex-row mb-1 sm:mb-0 justify-between w-full">
-          <h2 className="text-2xl leading-tight">Content Management</h2>
+        <div className="flex flex-col lg:flex-row mb-1 sm:mb-0 justify-between">
+          <div className="">
+            <h2 className="text-2xl leading-tight mb-5 md:mb-0">
+              Content Management
+            </h2>
+          </div>
+          <div className="text-end">
+            <form className="flex w-full max-w-sm space-x-3">
+              <div className="">
+                <input
+                  type="text"
+                  id='"form-subscribe-Filter'
+                  className="md:px-4 py-2 rounded-md"
+                  placeholder="Search Course"
+                />
+              </div>
+              <Link href="/tutorials/createTu">
+                <button
+                  className="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-primary rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 focus:ring-offset-purple-200"
+                  type="submit"
+                >
+                  Add Content
+                </button>
+              </Link>
+            </form>
+          </div>
         </div>
         <div className="py-4 overflow-x-auto">
           <ContentTable />
