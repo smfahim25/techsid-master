@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { API_BASE_URI } from "@/data/apiservice";
 import { toast } from "react-toastify";
 
-const Page = () => {
+const CreateTutorial = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -314,4 +314,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default CreateTutorial;

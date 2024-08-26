@@ -31,9 +31,9 @@
     "app/layout.tsx",
     "config/firebase.js",
     "app/signup/SocialSignupButtons.tsx",
-    "app/courses/create/page.jsx",
-    "app/courses/edit/page.jsx",
-    "app/tutorials/createTu/page.jsx",
+    "app/courses/create/page.js",
+    "app/courses/edit/page.js",
+    "app/tutorials/createTu/page.js",
     "app/courses/courseDetails/page.jsx"
   ],
   "exclude": ["node_modules"]

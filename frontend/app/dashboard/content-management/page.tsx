@@ -77,7 +77,7 @@ const ContentTable: React.FC = () => {
               {item.createAt}
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-              <Link href={`/tutorials/editTu?id=${item?.id}`}>
+              <Link href={`/tutorials/edit?id=${item?.id}`}>
                 <button className="text-primary hover:text-secondary">
                   Edit
                 </button>

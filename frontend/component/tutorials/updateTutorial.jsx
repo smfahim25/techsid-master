@@ -10,7 +10,7 @@ import { API_BASE_URI } from "@/data/apiservice";
 import { toast } from "react-toastify";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const Page = () => {
+const UpdateTutorial = () => {
   const params = useSearchParams();
   const tutorialId = params?.get("id");
 
@@ -194,7 +194,7 @@ const Page = () => {
         <main className="px-10 py-3 min-h-screen">
           <form
             onSubmit={handleSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-5"
+            className="grid grid-cols-1 md:grid-cols-2 gap-10"
           >
             <div>
               <label
@@ -307,12 +307,12 @@ const Page = () => {
                   placeholder="Add category"
                   value={customCat}
                   onChange={(e) => setCustomCat(e.target.value)}
-                  className="w-[150px] border-2 px-4 py-1 rounded-md"
+                  className="w-[150px] border-2 px-4 py-2 rounded-md"
                 />
                 <button
                   type="button"
                   onClick={handleAdd}
-                  className="bg-primary text-white px-4 py-1 rounded-md"
+                  className="bg-primary text-white px-4 py-2 rounded-md"
                 >
                   Add
                 </button>
@@ -356,4 +356,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default UpdateTutorial;
