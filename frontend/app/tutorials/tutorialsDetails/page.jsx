@@ -119,7 +119,7 @@ const TutorialsPage = () => {
             <ul>
               <li className="mb-2">
                 <button
-                  onClick={() => setSelectedTutorialIndex(index)}
+                  onClick={() => setSelectedTutorialIndex(title)}
                   className={`text-primary hover:underline`}
                 >
                   {details?.title}

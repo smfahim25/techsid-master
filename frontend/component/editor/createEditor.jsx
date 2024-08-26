@@ -1,15 +1,14 @@
 "use client";
 
-import Footer from "@/layout/Footer/Footer";
-import Header from "@/layout/Header/Header";
 import { useEffect, useState } from "react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useSelector } from "react-redux";
-import { API_BASE_URI } from "@/data/apiservice";
 import { toast } from "react-toastify";
 
-const CreateCourseForm = () => {
+const API_BASE_URI = "https://techsiid-master.onrender.com/api/v1";
+
+export default function CreateEditor() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -163,7 +162,6 @@ const CreateCourseForm = () => {
 
   return (
     <div>
-      <Header />
       <main className="px-10 py-3">
         <form
           onSubmit={handleSubmit}
@@ -407,9 +405,6 @@ const CreateCourseForm = () => {
           </div>
         </form>
       </main>
-      <Footer />
     </div>
   );
-};
-
-export default CreateCourseForm;
+}

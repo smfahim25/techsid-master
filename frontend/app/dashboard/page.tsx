@@ -107,7 +107,7 @@ const DashboardLayout: React.FC = () => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <main className="flex-1 py-4 px-2">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {Object.values(dashboardData).map((widget, idx) => (
             <DashboardWidget key={idx} {...widget} />
           ))}

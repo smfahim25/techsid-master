@@ -10,7 +10,7 @@ import { API_BASE_URI } from "@/data/apiservice";
 import { toast } from "react-toastify";
 import { useRouter, useSearchParams } from "next/navigation";
 
-const Page = () => {
+const EditCourse = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -443,4 +443,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default EditCourse;
