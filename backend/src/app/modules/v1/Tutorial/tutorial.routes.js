@@ -34,4 +34,5 @@ router.patch(
   TutorialController.EditTutorial,
 );
 router.get('/', TutorialController.GetAllTutorials);
+router.get('/:catId', TutorialController.GetAllTutorialsByCat);
 export const TutorialRoutes = router;

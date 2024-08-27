@@ -65,10 +65,21 @@ const GetAllTutorials = async (query) => {
   });
   return result;
 };
+
+const GetAllTutorialsByCat = async (params) => {
+  const result = await prisma.tutorial.findMany({
+    where: { catId: params.catId },
+    include: {
+      category: true,
+    },
+  });
+  return result;
+};
 export const TutorialService = {
   GetAllCategory,
   CreateCategory,
   CreateTutorial,
   GetAllTutorials,
   EditTutorial,
+  GetAllTutorialsByCat,
 };
