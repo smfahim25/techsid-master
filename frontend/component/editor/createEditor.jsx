@@ -28,6 +28,7 @@ export default function CreateEditor() {
   const [content, setContent] = useState("");
   const [categories, setCategories] = useState([]);
   const [customCat, setCustomCat] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -50,6 +51,7 @@ export default function CreateEditor() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await fetch(
           `${API_BASE_URI}/courses/get-all-categories`,
@@ -68,8 +70,10 @@ export default function CreateEditor() {
 
         const result = await response.json();
         setCategories(result?.data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
+        setLoading(false);
       }
     };
 
@@ -111,6 +115,7 @@ export default function CreateEditor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const payload = {
       title: formData?.title,
       description: description,
@@ -142,6 +147,7 @@ export default function CreateEditor() {
 
       const data = await response.json();
       toast.success("Course created successfully:");
+      setLoading(false);
       setFormData({
         title: "",
         description: "",
@@ -156,6 +162,7 @@ export default function CreateEditor() {
         status: "",
       });
     } catch (error) {
+      setLoading(false);
       toast.error("Error creating article:");
     }
   };
@@ -163,247 +170,256 @@ export default function CreateEditor() {
   return (
     <div>
       <main className="px-10 py-3">
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-5"
-        >
-          <div>
-            <label
-              htmlFor="title"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Title
-            </label>
-            <input
-              type="text"
-              name="title"
-              id="title"
-              value={formData.title}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
-            />
+        {loading ? (
+          <div className="mt-20 inset-0 flex items-center justify-center">
+            <div
+              className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
+              style={{ width: "4em" }}
+            ></div>
           </div>
-          <div>
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Category
-            </label>
-            <select
-              name="category"
-              id="category"
-              value={formData.category}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
-            >
-              <option value="">Select a category</option>
-              {categories?.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-              {/* Add more categories as needed */}
-            </select>
-            <div className="flex items-center gap-2 mt-3">
+        ) : (
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-5"
+          >
+            <div>
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Title
+              </label>
               <input
                 type="text"
-                placeholder="add category"
-                value={customCat}
-                onChange={(e) => setCustomCat(e.target.value)}
-                className="w-[150px] border-2 px-4 py-1 rounded-md"
+                name="title"
+                id="title"
+                value={formData.title}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
               />
-              <button
-                type="button"
-                onClick={handleAdd}
-                className="bg-primary text-white px-2 rounded-md py-1 cursor-pointer"
+            </div>
+            <div>
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700"
               >
-                Add
+                Category
+              </label>
+              <select
+                name="category"
+                id="category"
+                value={formData.category}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
+              >
+                <option value="">Select a category</option>
+                {categories?.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+                {/* Add more categories as needed */}
+              </select>
+              <div className="flex items-center gap-2 mt-3">
+                <input
+                  type="text"
+                  placeholder="add category"
+                  value={customCat}
+                  onChange={(e) => setCustomCat(e.target.value)}
+                  className="w-[150px] border-2 px-4 py-1 rounded-md"
+                />
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  className="bg-primary text-white px-2 rounded-md py-1 cursor-pointer"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="duration"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Duration
+              </label>
+              <input
+                type="text"
+                name="duration"
+                id="duration"
+                value={formData.duration}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="level"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Level
+              </label>
+              <select
+                name="level"
+                id="level"
+                value={formData.level}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
+              >
+                <option value="">Select difficulty level</option>
+                <option value="BEGINNER">Beginner</option>
+                <option value="INTERMEDIATE">Intermediate</option>
+                <option value="ADVANCED">Advanced</option>
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="instructor"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Instructor
+              </label>
+              <input
+                type="text"
+                name="instructor"
+                id="instructor"
+                value={formData.instructor}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="img"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Thumbnail
+              </label>
+              <input
+                type="file"
+                name="img"
+                id="img"
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border bg-white border-gray-300 rounded-md shadow-sm py-2 px-2"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="rating"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Rating
+              </label>
+              <input
+                type="text"
+                name="rating"
+                id="rating"
+                value={formData.rating}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="fees"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Fees
+              </label>
+              <input
+                type="text"
+                name="fees"
+                id="fees"
+                value={formData.fees}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Description
+              </label>
+              <div>
+                <CKEditor
+                  editor={ClassicEditor}
+                  data={description}
+                  onChange={handleEditorChange}
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="content"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Content
+              </label>
+              <div>
+                <CKEditor
+                  editor={ClassicEditor}
+                  data={content}
+                  onChange={handleContentChange}
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor="language"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Language
+              </label>
+              <input
+                type="text"
+                name="language"
+                id="language"
+                value={formData.language}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="status"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Status
+              </label>
+              <select
+                name="status"
+                id="status"
+                className="border-2 rounded-md px-2 py-2"
+                value={formData?.status}
+                onChange={handleChange}
+              >
+                <option>Select Status</option>
+                <option value="INACTIVE">In Active</option>
+                <option value="ACTIVE">Active</option>
+              </select>
+            </div>
+            <div className="md:mt-5 flex items-center">
+              <button
+                type="submit"
+                className="bg-primary text-white px-4 py-2 rounded-md"
+              >
+                Create course
               </button>
             </div>
-          </div>
-          <div>
-            <label
-              htmlFor="duration"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Duration
-            </label>
-            <input
-              type="text"
-              name="duration"
-              id="duration"
-              value={formData.duration}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="level"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Level
-            </label>
-            <select
-              name="level"
-              id="level"
-              value={formData.level}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
-            >
-              <option value="">Select difficulty level</option>
-              <option value="BEGINNER">Beginner</option>
-              <option value="INTERMEDIATE">Intermediate</option>
-              <option value="ADVANCED">Advanced</option>
-            </select>
-          </div>
-          <div>
-            <label
-              htmlFor="instructor"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Instructor
-            </label>
-            <input
-              type="text"
-              name="instructor"
-              id="instructor"
-              value={formData.instructor}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="img"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Thumbnail
-            </label>
-            <input
-              type="file"
-              name="img"
-              id="img"
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border bg-white border-gray-300 rounded-md shadow-sm py-2 px-2"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="rating"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Rating
-            </label>
-            <input
-              type="text"
-              name="rating"
-              id="rating"
-              value={formData.rating}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="fees"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Fees
-            </label>
-            <input
-              type="text"
-              name="fees"
-              id="fees"
-              value={formData.fees}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Description
-            </label>
-            <div>
-              <CKEditor
-                editor={ClassicEditor}
-                data={description}
-                onChange={handleEditorChange}
-              />
-            </div>
-          </div>
-          <div>
-            <label
-              htmlFor="content"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Content
-            </label>
-            <div>
-              <CKEditor
-                editor={ClassicEditor}
-                data={content}
-                onChange={handleContentChange}
-              />
-            </div>
-          </div>
-          <div>
-            <label
-              htmlFor="language"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Language
-            </label>
-            <input
-              type="text"
-              name="language"
-              id="language"
-              value={formData.language}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-2"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="status"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Status
-            </label>
-            <select
-              name="status"
-              id="status"
-              className="border-2 rounded-md px-2 py-2"
-              value={formData?.status}
-              onChange={handleChange}
-            >
-              <option>Select Status</option>
-              <option value="INACTIVE">In Active</option>
-              <option value="ACTIVE">Active</option>
-            </select>
-          </div>
-          <div className="md:mt-5 flex items-center">
-            <button
-              type="submit"
-              className="bg-primary text-white px-4 py-2 rounded-md"
-            >
-              Create course
-            </button>
-          </div>
-        </form>
+          </form>
+        )}
       </main>
     </div>
   );

@@ -6,7 +6,7 @@ type Course = {
   id: number;
   title: string;
   instructor: string;
-  enrollment: number;
+  fees: number;
   status: string;
 };
 
@@ -35,7 +35,15 @@ const CourseTable: React.FC = () => {
 
     fetchData();
   }, []);
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className="mt-20 inset-0 flex items-center justify-center">
+        <div
+          className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
+          style={{ width: "4em" }}
+        ></div>
+      </div>
+    );
   if (error) return <p>Error: {error}</p>;
   return (
     <table className=" leading-normal">
@@ -76,9 +84,7 @@ const CourseTable: React.FC = () => {
               </p>
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <p className="text-gray-900 whitespace-no-wrap">
-                {course.enrollment}
-              </p>
+              <p className="text-gray-900 whitespace-no-wrap">{course.fees}</p>
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <span

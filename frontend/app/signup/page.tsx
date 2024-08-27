@@ -58,7 +58,12 @@ const SignupForm: React.FC = () => {
 
       const result = await response.json(); // Parse the JSON response
       toast.success("Signup successful!");
-
+      setFormData({
+        fullName: "",
+        email: "",
+        password: "",
+        offers: false,
+      });
       router.push("/login");
       // You can redirect the user or perform other actions after successful signup
     } catch (error) {

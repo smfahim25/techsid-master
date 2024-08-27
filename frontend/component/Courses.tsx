@@ -116,30 +116,40 @@ const CoursesSection: React.FC = () => {
 
     fetchData();
   }, []);
-
-  if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
   return (
-    <section className="py-16">
-      <div className="container mx-auto px-6">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">
-          Discover the Variety of Courses Here
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-10">
-          {data?.map((course: Course) => (
-            <ContentCard
-              key={course.id}
-              id={course.id}
-              title={course.title}
-              description={course.description}
-              rating={course.rating}
-              reviewCount={course.rating}
-              imageSrc={course.img}
-            />
-          ))}
+    <div>
+      {loading ? (
+        <div className="mt-20 inset-0 flex items-center justify-center">
+          <div
+            className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
+            style={{ width: "4em" }}
+          ></div>
         </div>
-      </div>
-    </section>
+      ) : (
+        // </div>
+        <section className="py-16">
+          <div className="container mx-auto px-6">
+            <h2 className="text-3xl font-bold mb-6 text-gray-800">
+              Discover the Variety of Courses Here
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-10">
+              {data?.map((course: Course) => (
+                <ContentCard
+                  key={course.id}
+                  id={course.id}
+                  title={course.title}
+                  description={course.description}
+                  rating={course.rating}
+                  reviewCount={course.rating}
+                  imageSrc={course.img}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+    </div>
   );
 };
 

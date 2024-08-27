@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const UserTable = () => {
   const user = useSelector((state) => state.auth.user);
@@ -40,7 +41,50 @@ const UserTable = () => {
     fetchData();
   }, [user]); // Empty dependency array to run only once on mount
 
-  if (loading) return <p>Loading...</p>;
+  const handleStatusChange = async (orderId, newStatus) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://techsiid-master.onrender.com/api/v1/orders/change-order-status`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${user?.data.accessToken}`,
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
+      if (!response.ok) {
+        setLoading(false);
+        throw new Error("Failed to update status");
+      }
+
+      // Update the status in the local state
+      setData((prevData) =>
+        prevData.map((order) =>
+          order.id === orderId ? { ...order, status: newStatus } : order
+        )
+      );
+      toast.success("Succesfully updated status");
+      setLoading(false);
+    } catch (error) {
+      toast.error("Error updating status");
+      setError(error.message);
+      setLoading(false);
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="mt-20 inset-0 flex items-center justify-center">
+        <div
+          className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
+          style={{ width: "4em" }}
+        ></div>
+      </div>
+    );
   if (error) return <p>Error: {error}</p>;
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
@@ -109,7 +153,14 @@ const UserTable = () => {
               </p>
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <p className="text-gray-900 whitespace-no-wrap">{order.status}</p>
+              <select
+                value={order.status}
+                onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="PAID">Paid</option>
+                <option value="UNPAID">Unpaid</option>
+              </select>
             </td>
           </tr>
         ))}
