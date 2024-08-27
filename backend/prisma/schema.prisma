@@ -28,23 +28,24 @@ model CourseCategory {
 }
 
 model Course {
-  id          String         @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String
-  instructor  String
-  fees        Int
-  status      Status         @default(ACTIVE)
-  catId       String         @db.ObjectId
-  img         String
-  rating      Int            @default(0)
-  language    String
-  content     String?
-  level       Level
-  duration    String
-  createAt    DateTime       @default(now())
-  updatedAt   DateTime       @default(now())
-  category    CourseCategory @relation(fields: [catId], references: [id])
-  Order       Order[]
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  titleDescription String
+  description      String
+  instructor       String
+  fees             Int
+  status           Status         @default(ACTIVE)
+  catId            String         @db.ObjectId
+  img              String
+  rating           Int            @default(0)
+  language         String
+  content          String?
+  level            Level
+  duration         String
+  createAt         DateTime       @default(now())
+  updatedAt        DateTime       @default(now())
+  category         CourseCategory @relation(fields: [catId], references: [id])
+  Order            Order[]
 }
 
 model TutorialCategory {
