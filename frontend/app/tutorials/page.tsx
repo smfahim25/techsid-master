@@ -31,7 +31,7 @@ const Page: React.FC = () => {
           throw new Error("Network response was not ok");
         }
         const result = await response.json();
-        console.log(result);
+
         setData(result?.data); // Adjust this according to your API response
       } catch (error: any) {
         setError(error.message);
@@ -47,25 +47,35 @@ const Page: React.FC = () => {
     <div>
       <Header />
       <main className="min-h-screen">
-        {loading && <p>Loading...</p>} {error && <p>Error: {error}</p>}
-        <section className="py-16">
-          <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800">
-              Discover Our Tutorials
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {data?.map((tutorial: Course) => (
-                <TutorialsContent
-                  key={tutorial.id}
-                  id={tutorial.id}
-                  title={tutorial.title}
-                  description={tutorial.description}
-                  imageSrc={tutorial.img}
-                />
-              ))}
-            </div>
+        {loading && (
+          <div className="mt-20 inset-0 flex items-center justify-center">
+            <div
+              className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
+              style={{ width: "4em" }}
+            ></div>
           </div>
-        </section>
+        )}
+        {error && <p>Error: {error}</p>}
+        {!loading && (
+          <section className="py-16">
+            <div className="container mx-auto px-6">
+              <h2 className="text-3xl font-bold mb-6 text-gray-800">
+                Discover Our Tutorials
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {data?.map((tutorial: Course) => (
+                  <TutorialsContent
+                    key={tutorial.id}
+                    id={tutorial.id}
+                    title={tutorial.title}
+                    description={tutorial.description}
+                    imageSrc={tutorial.img}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
       </main>
       <Footer />
     </div>

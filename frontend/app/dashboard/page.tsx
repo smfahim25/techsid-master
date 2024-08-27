@@ -97,11 +97,12 @@ const DashboardLayout: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const router = useRouter();
   useEffect(() => {
-    if (user?.data?.user?.role !== "ADMIN") {
-      router.push("/");
-    }
-    if (!user) {
-      router.push("/login");
+    if (user) {
+      if (user?.data?.user?.role !== "ADMIN") {
+        router.push("/");
+      } else {
+        router.push("/login");
+      }
     }
   }, [user, router]);
   return (

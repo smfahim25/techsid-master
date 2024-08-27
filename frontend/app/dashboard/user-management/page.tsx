@@ -2,12 +2,15 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+
 interface userData {
   id: string;
   name: string;
   role: string;
   email: string;
 }
+
 interface User {
   data: {
     id: string;
@@ -28,7 +31,7 @@ interface RootState {
 
 const UserTable: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<userData[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,11 +41,10 @@ const UserTable: React.FC = () => {
         const response = await fetch(
           "https://techsiid-master.onrender.com/api/v1/users",
           {
-            method: "GET", // or 'POST', 'PUT', etc.
+            method: "GET",
             headers: {
-              "Content-Type": "application/json", // Ensure the content type is JSON
-              Authorization: `${user?.data.accessToken}`, // Add this if your API requires an authentication token
-              // Add any other headers your API might require
+              "Content-Type": "application/json",
+              Authorization: `${user?.data.accessToken}`, // Assuming a Bearer token
             },
           }
         );
@@ -61,10 +63,60 @@ const UserTable: React.FC = () => {
     };
 
     fetchData();
-  }, [user]); // Empty dependency array to run only once on mount
+  }, [user]);
 
-  if (loading) return <p>Loading...</p>;
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://techsiid-master.onrender.com/api/v1/users/edit-user/${userId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `${user?.data.accessToken}`, // Assuming a Bearer token
+          },
+          body: JSON.stringify({ role: newRole }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update role");
+        setLoading(false);
+      }
+
+      // Optionally update the state to reflect the new role without refetching all data
+      // Assuming the API returns the updated user data
+      const updatedUser = await response.json();
+
+      // Update the state with the new role
+      setData((prevData) => {
+        if (!prevData) return null; // or [] if you want to return an empty array
+        return prevData.map((user) =>
+          user.id === userId ? { ...user, role: newRole } : user
+        );
+      });
+      toast.success("user role updated successfully");
+      setLoading(false);
+    } catch (error: any) {
+      setError(error.message);
+      toast.error(error.message);
+      setLoading(false);
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="mt-20 inset-0 flex items-center justify-center absolute z-50 opacity-75">
+        <div
+          className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
+          style={{ width: "4em" }}
+        ></div>
+      </div>
+    );
+
   if (error) return <p>Error: {error}</p>;
+
   return (
     <table className="min-w-full leading-normal">
       <thead>
@@ -75,13 +127,10 @@ const UserTable: React.FC = () => {
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
             Role
           </th>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Actions
-          </th>
         </tr>
       </thead>
       <tbody>
-        {data.map((user: userData) => (
+        {data?.map((user) => (
           <tr key={user.id}>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <div className="flex items-center">
@@ -105,12 +154,14 @@ const UserTable: React.FC = () => {
               </div>
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <p className="text-gray-900 whitespace-no-wrap">{user.role}</p>
-            </td>
-            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm text-center">
-              <button className="text-primary hover:text-secondary">
-                Edit
-              </button>
+              <select
+                className="block w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+                value={user.role}
+                onChange={(e) => handleRoleChange(user.id, e.target.value)}
+              >
+                <option value="ADMIN">Admin</option>
+                <option value="USER">User</option>
+              </select>
             </td>
           </tr>
         ))}

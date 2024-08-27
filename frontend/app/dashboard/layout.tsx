@@ -37,20 +37,22 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const user = useSelector((state: RootState) => state.auth.user);
   const router = useRouter();
   useEffect(() => {
-    if (user?.data?.user?.role === "ADMIN") {
-      router.push("/dashboard");
+    if (user) {
+      if (user?.data?.user?.role === "ADMIN") {
+        router.push("/dashboard");
+      } else {
+        router.push("/");
+      }
     } else {
-      router.push("/");
+      router.push("/login");
     }
-    // } else {
-    //   router.push("/login");
-    // }
   }, [user, router]);
   return (
-    <div className="min-h-screen">
+    <div>
       <Header />
-      {user?.data?.user?.role === "ADMIN" && (
-        <main>
+
+      <main className="min-h-screen">
+        {user?.data?.user?.role === "ADMIN" && (
           <div className="flex overflow-hidden bg-gray-100">
             {/* Sidebar for desktop */}
             <aside className={`w-1/5 bg-white shadow hideNav`}>
@@ -128,8 +130,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               {children}
             </div>
           </div>
-        </main>
-      )}
+        )}
+      </main>
+
       <Footer />
     </div>
   );
