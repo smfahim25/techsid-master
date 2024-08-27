@@ -53,10 +53,20 @@ const GetAllTutorials = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const GetAllTutorialsByCat = catchAsync(async (req, res) => {
+  const result = await TutorialService.GetAllTutorialsByCat(req.params);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Get All Tutorials By Category Successfully!',
+    data: result,
+  });
+});
 export const TutorialController = {
   EditTutorial,
   CreateTutorial,
   CreateCategory,
   GetAllCategory,
   GetAllTutorials,
+  GetAllTutorialsByCat,
 };
