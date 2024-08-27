@@ -29,6 +29,18 @@ const GetAllOrder = async () => {
   });
   return result;
 };
+const GetOrderStatus = async (params) => {
+  const result = await prisma.order.findMany({
+    where: {
+      userId: params.id,
+    },
+    include: {
+      course: true,
+      user: true,
+    },
+  });
+  return result;
+};
 const ChangeOrderStatus = async (payload) => {
   const getOrder = await prisma.order.findFirst({ where: { id: payload.id } });
   if (!getOrder) {
@@ -44,4 +56,5 @@ export const OrderService = {
   GetAllOrder,
   CreateOrder,
   ChangeOrderStatus,
+  GetOrderStatus,
 };
