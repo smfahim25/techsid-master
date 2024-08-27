@@ -96,7 +96,7 @@ model Order {
   userId    String        @db.ObjectId
   user      User          @relation(fields: [userId], references: [id])
   courseId  String        @db.ObjectId
-  status    PaymentStatus @default(UNPAID)
+  status    PaymentStatus @default(PAID)
   price     Int
   course    Course        @relation(fields: [courseId], references: [id])
   createAt  DateTime      @default(now())
