@@ -20,6 +20,7 @@ const LoginForm: React.FC = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -32,6 +33,7 @@ const LoginForm: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
     const userData = {
       email: formData.email,
@@ -56,6 +58,7 @@ const LoginForm: React.FC = () => {
       const result = await response.json(); // Parse the JSON response
       dispatch(login(result));
       toast.success("Login successful:");
+      setLoading(false);
       setFormData({
         email: "",
         password: "",
@@ -64,6 +67,7 @@ const LoginForm: React.FC = () => {
       // You can redirect the user or perform other actions after successful signup
     } catch (error) {
       toast.error("Error during login:");
+      setLoading(false);
     }
   };
 
@@ -71,6 +75,14 @@ const LoginForm: React.FC = () => {
     <div>
       <Header />
       <main>
+        {loading && (
+          <div className="mt-20 inset-0 flex items-center justify-center absolute z-50 bg-white opacity-75">
+            <div
+              className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
+              style={{ width: "4em" }}
+            ></div>
+          </div>
+        )}
         <div className="max-w-md mx-auto mt-10">
           <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <form onSubmit={handleSubmit} className="">

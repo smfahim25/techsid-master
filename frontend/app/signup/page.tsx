@@ -22,6 +22,7 @@ const SignupForm: React.FC = () => {
     password: "",
     offers: false,
   });
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked, type } = e.target;
@@ -32,6 +33,7 @@ const SignupForm: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
     // Here you can handle the submission to your backend service
     const userData = {
@@ -53,6 +55,7 @@ const SignupForm: React.FC = () => {
         const errorData = await response.json();
         console.error("Signup failed:", errorData);
         toast.error(`Signup failed: ${errorData.message}`);
+        setLoading(false);
         return;
       }
 
@@ -64,10 +67,12 @@ const SignupForm: React.FC = () => {
         password: "",
         offers: false,
       });
+      setLoading(false);
       router.push("/login");
       // You can redirect the user or perform other actions after successful signup
     } catch (error) {
       toast.error("Error during signup:");
+      setLoading(false);
     }
   };
 
@@ -75,6 +80,14 @@ const SignupForm: React.FC = () => {
     <div>
       <Header />
       <main>
+        {loading && (
+          <div className="mt-20 inset-0 flex items-center justify-center absolute z-50 bg-white opacity-75">
+            <div
+              className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
+              style={{ width: "4em" }}
+            ></div>
+          </div>
+        )}
         <div className="max-w-md mx-auto mt-10">
           <form
             onSubmit={handleSubmit}

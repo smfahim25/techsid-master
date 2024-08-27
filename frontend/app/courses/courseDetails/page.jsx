@@ -97,7 +97,7 @@ const CourseDetail = () => {
       <Header />
       <main className="min-h-screen">
         {loading ? (
-          <div className="mt-20 inset-0 flex items-center justify-center">
+          <div className="mt-20 inset-0 flex items-center justify-center absolute z-50 opacity-75">
             <div
               className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
               style={{ width: "4em" }}
@@ -141,7 +141,7 @@ const CourseDetail = () => {
                     {details?.level}
                   </span>
                   <button
-                    className="bg-blue-500 px-2 py-2 text-white rounede-lg"
+                    className="bg-primary px-3 py-2 text-white rounded-lg"
                     onClick={handleBuy}
                   >
                     Buy course

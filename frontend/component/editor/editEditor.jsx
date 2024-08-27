@@ -210,7 +210,7 @@ const EditCourse = () => {
       <Header />
       <div className="min-h-screen">
         {loading ? (
-          <div className="mt-20 inset-0 flex items-center justify-center">
+          <div className="mt-20 inset-0 flex items-center justify-center absolute z-50 opacity-75">
             <div
               className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
               style={{ width: "4em" }}
@@ -221,7 +221,7 @@ const EditCourse = () => {
             <h1 className="text-xl font-semibold">Edit Course</h1>
             <form
               onSubmit={handleSubmit}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6"
+              className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-6"
             >
               <div>
                 <label

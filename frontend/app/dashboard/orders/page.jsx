@@ -78,7 +78,7 @@ const UserTable = () => {
 
   if (loading)
     return (
-      <div className="mt-20 inset-0 flex items-center justify-center">
+      <div className="mt-20 inset-0 flex items-center justify-center absolute z-50 opacity-75">
         <div
           className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
           style={{ width: "4em" }}
