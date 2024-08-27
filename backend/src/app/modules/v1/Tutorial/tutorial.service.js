@@ -58,7 +58,7 @@ const GetAllCategory = async () => {
 const GetAllTutorials = async (query) => {
   const id = query.id;
   const result = await prisma.tutorial.findMany({
-    where: { id: id },
+    where: { id: id, delete: false },
     include: {
       category: true,
     },
@@ -68,7 +68,7 @@ const GetAllTutorials = async (query) => {
 
 const GetAllTutorialsByCat = async (params) => {
   const result = await prisma.tutorial.findMany({
-    where: { catId: params.catId },
+    where: { catId: params.catId, delete: false },
     include: {
       category: true,
     },

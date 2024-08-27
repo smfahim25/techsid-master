@@ -38,6 +38,7 @@ model Course {
   catId            String         @db.ObjectId
   img              String
   rating           Int            @default(0)
+  delete           Boolean        @default(false)
   language         String
   content          String?
   level            Level
@@ -64,6 +65,7 @@ model Tutorial {
   catId       String            @db.ObjectId
   videoLink   String
   img         String?
+  delete      Boolean           @default(false)
   code        String
   createAt    DateTime          @default(now())
   updatedAt   DateTime          @default(now())
