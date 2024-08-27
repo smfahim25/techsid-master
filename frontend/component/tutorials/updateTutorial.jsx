@@ -190,8 +190,16 @@ const UpdateTutorial = () => {
   return (
     <div>
       <Header />
-      {!loading && (
-        <main className="px-10 py-3 min-h-screen">
+
+      <main className="px-10 py-3 min-h-screen">
+        {loading ? (
+          <div className="mt-20 inset-0 flex items-center justify-center absolute z-50 opacity-75">
+            <div
+              className="w-16 h-16 border-4 border-dashed rounded-full animate-spin bg-primary"
+              style={{ width: "4em" }}
+            ></div>
+          </div>
+        ) : (
           <form
             onSubmit={handleSubmit}
             className="grid grid-cols-1 md:grid-cols-2 gap-10"
@@ -349,8 +357,9 @@ const UpdateTutorial = () => {
               </button>
             </div>
           </form>
-        </main>
-      )}
+        )}
+      </main>
+
       <Footer />
     </div>
   );
