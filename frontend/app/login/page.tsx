@@ -54,6 +54,7 @@ const LoginForm: React.FC = () => {
         toast.error(`Login failed: ${errorData.message}`);
         return;
       }
+      console.log(response);
 
       const result = await response.json(); // Parse the JSON response
       dispatch(login(result));
@@ -66,7 +67,7 @@ const LoginForm: React.FC = () => {
       router.push("/");
       // You can redirect the user or perform other actions after successful signup
     } catch (error) {
-      toast.error("Error during login:");
+      toast.error("Email and password doesn't match");
       setLoading(false);
     }
   };
