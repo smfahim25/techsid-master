@@ -52,12 +52,12 @@ const TutorialsPage = () => {
   const params = useSearchParams();
   const tutorialId = params?.get("id");
   const [selectedTutorialIndex, setSelectedTutorialIndex] = useState(0);
-  const selectedTutorial = tutorials[selectedTutorialIndex];
+
   const [loading, setLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-  const [details, setDetails] = useState("");
+  const [details, setDetails] = useState([]);
   const menuRef = useRef();
-
+  const selectedTutorial = details[selectedTutorialIndex];
   const closeMenu = () => {
     setShowMenu(false);
   };
@@ -81,7 +81,7 @@ const TutorialsPage = () => {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `${API_BASE_URI}/tutorials?id=${tutorialId}`,
+            `${API_BASE_URI}/tutorials/${tutorialId}`,
             {
               method: "GET",
               headers: {
@@ -95,7 +95,8 @@ const TutorialsPage = () => {
           }
 
           const result = await response.json();
-          const data = result.data[0];
+          const data = result.data;
+          console.log(data);
           setDetails(data);
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -123,16 +124,22 @@ const TutorialsPage = () => {
           <div className="flex min-h-screen">
             {/* Sidebar */}
             <aside className=" bg-gray-100 p-6 hideNav">
-              <h2 className="text-xl font-bold mb-4">Tutorial</h2>
+              <h2 className="text-xl font-bold mb-4">
+                {details[0]?.category?.name}
+              </h2>
               <ul>
-                <li className="mb-2">
-                  <button
-                    onClick={() => setSelectedTutorialIndex(title)}
-                    className={`text-primary hover:underline`}
-                  >
-                    {details?.title}
-                  </button>
-                </li>
+                {details?.map((tutorial, index) => (
+                  <li key={index} className="mb-2">
+                    <button
+                      onClick={() => setSelectedTutorialIndex(index)}
+                      className={`text-primary hover:underline ${
+                        selectedTutorialIndex === index ? "font-bold" : ""
+                      }`}
+                    >
+                      {tutorial.title}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </aside>
 
@@ -171,7 +178,7 @@ const TutorialsPage = () => {
                             selectedTutorialIndex === index ? "font-bold" : ""
                           }`}
                         >
-                          {tutorial.title}
+                          {tutorial?.title}
                         </button>
                       </li>
                     ))}
@@ -180,19 +187,27 @@ const TutorialsPage = () => {
               </div>
               <div className="mb-8">
                 <h2 className="text-2xl font-bold mb-2">
-                  {selectedTutorial.title}
+                  {selectedTutorial?.title}
                 </h2>
-                <p className="mb-4">{selectedTutorial.introduction}</p>
+                <div className="mb-4">
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: selectedTutorial?.description,
+                    }}
+                  />
+                </div>
 
                 {/* Example Code Snippet */}
                 <div className="bg-white shadow-md p-5 my-4">
                   <h3 className="font-bold mb-2">Example:</h3>
                   <pre className="bg-gray-100 p-3 rounded">
-                    <code>{selectedTutorial.example}</code>
+                    <code>{selectedTutorial?.code}</code>
                   </pre>
-                  <button className="mt-3 bg-primary text-white py-2 px-4 rounded hover:bg-secondary">
-                    Try it Yourself
-                  </button>
+                  <Link href="/lab" target="_blank" rel="noopener noreferrer">
+                    <button className="mt-3 bg-primary text-white py-2 px-4 rounded hover:bg-secondary">
+                      Try it Yourself
+                    </button>
+                  </Link>
                 </div>
 
                 {/* Video Tutorial */}
@@ -201,7 +216,7 @@ const TutorialsPage = () => {
                   <div className="w-full aspect-video bg-gray-300 flex justify-center items-center">
                     <iframe
                       className="w-full h-full"
-                      src={selectedTutorial.videoSrc}
+                      src={selectedTutorial?.videoLink}
                       title="Video Tutorial"
                       frameBorder="0"
                       allow="autoplay; encrypted-media"
@@ -212,7 +227,7 @@ const TutorialsPage = () => {
 
                 {/* Exercise */}
                 <div className="my-4">
-                  <h3 className="font-bold mb-2">
+                  <h3 className="font-bold mb-4">
                     Test Yourself With Exercises:
                   </h3>
                   <Link
@@ -234,18 +249,17 @@ const TutorialsPage = () => {
                       }
                       className="text-primary hover:underline"
                     >
-                      &lt; Previous:{" "}
-                      {tutorials[selectedTutorialIndex - 1].title}
+                      &lt; Previous: {details[selectedTutorialIndex - 1]?.title}
                     </button>
                   )}
-                  {selectedTutorialIndex < tutorials.length - 1 && (
+                  {selectedTutorialIndex < details?.length - 1 && (
                     <button
                       onClick={() =>
                         setSelectedTutorialIndex(selectedTutorialIndex + 1)
                       }
                       className="text-primary hover:underline ml-auto"
                     >
-                      Next: {tutorials[selectedTutorialIndex + 1].title} &gt;
+                      Next: {details[selectedTutorialIndex + 1]?.title} &gt;
                     </button>
                   )}
                 </div>

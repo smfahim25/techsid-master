@@ -8,6 +8,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { useSelector } from "react-redux";
 import { API_BASE_URI } from "@/data/apiservice";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const CreateTutorial = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +26,13 @@ const CreateTutorial = () => {
   const [categories, setCategories] = useState([]);
   const [customCat, setCustomCat] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
+  useEffect(() => {
+    if (user?.data?.user?.role !== "ADMIN") {
+      router.push("/");
+    }
+  }, [user, router]);
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
@@ -148,6 +155,7 @@ const CreateTutorial = () => {
         code: "",
         status: "",
       });
+      router.push("/tutorials");
     } catch (error) {
       toast.error("Error creating article:");
       setLoading(false);
@@ -283,12 +291,12 @@ const CreateTutorial = () => {
                   placeholder="add category"
                   value={customCat}
                   onChange={(e) => setCustomCat(e.target.value)}
-                  className="w-[150px] border-2 px-4 py-1 rounded-md"
+                  className="w-[150px] border-2 px-4 py-2 rounded-md"
                 />
                 <button
                   type="button"
                   onClick={handleAdd}
-                  className="bg-primary text-white px-2 rounded-md py-1 cursor-pointer"
+                  className="bg-primary text-white px-2 rounded-md py-2 cursor-pointer"
                 >
                   Add
                 </button>
@@ -317,7 +325,7 @@ const CreateTutorial = () => {
             <div className="flex items-center">
               <button
                 type="submit"
-                className="md:mt-5 bg-primary text-white px-4 py-2 rounded-md"
+                className="mt-5 bg-primary text-white px-4 py-2 rounded-md"
               >
                 Create Tutorials
               </button>

@@ -116,6 +116,9 @@ const UserTable = () => {
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
             Status
           </th>
+          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            Action
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -150,6 +153,17 @@ const UserTable = () => {
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <p className="text-gray-900 whitespace-no-wrap">
                 {formatDate(order?.course.createAt)}
+              </p>
+            </td>
+            <td
+              className={`px-5 py-5 border-b border-gray-200 bg-white text-sm `}
+            >
+              <p
+                className={`text-gray-900 text-center px-2 py-1 rounded-lg whitespace-no-wrap ${
+                  order?.status === "PAID" ? "bg-green-400" : "bg-red-400"
+                }`}
+              >
+                {order?.status}
               </p>
             </td>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

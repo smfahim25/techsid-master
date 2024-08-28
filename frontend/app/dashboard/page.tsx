@@ -100,9 +100,9 @@ const DashboardLayout: React.FC = () => {
     if (user) {
       if (user?.data?.user?.role !== "ADMIN") {
         router.push("/");
-      } else {
-        router.push("/login");
       }
+    } else {
+      router.push("/login");
     }
   }, [user, router]);
   return (
