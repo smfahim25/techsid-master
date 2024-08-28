@@ -89,7 +89,7 @@ const CourseDetail = () => {
 
     fetchData();
   }, [user, courseId]);
-  console.log(user);
+
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
 
@@ -197,10 +197,15 @@ const CourseDetail = () => {
               </div>
             </div>
             <div className="flex items-center mt-5">
-              {status.status !== "PAID" ? (
+              {status?.status !== "PAID" ? (
                 <button
                   className="bg-primary px-10 py-2 text-white rounded-lg"
-                  onClick={() => setShowModal(true)}
+                  onClick={() => {
+                    setShowModal(true);
+                    if (!user) {
+                      router.push("/login");
+                    }
+                  }}
                 >
                   Buy course
                 </button>
@@ -211,7 +216,7 @@ const CourseDetail = () => {
               )}
             </div>
             <div className="relative flex justify-center items-center">
-              {showModal && (
+              {showModal && user && (
                 <div className="absolute z-50 flex flex-col max-w-md gap-2 p-6 rounded-md shadow-md bg-white text-black h-[400px] md:h-[350px] w-[370px] md:w-[500px]">
                   <h2 className="text-xl text-center font-semibold leading-tight tracking-wide">
                     Order confirmation
