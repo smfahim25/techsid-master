@@ -89,7 +89,7 @@ const CourseDetail = () => {
 
     fetchData();
   }, [user, courseId]);
-
+  console.log(user);
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
 
@@ -269,9 +269,6 @@ const CourseDetail = () => {
             <div className="mt-10">
               <div className=" text-primary p-6 shadow-md">
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div
-                    dangerouslySetInnerHTML={{ __html: details?.description }}
-                  />
                   <div
                     dangerouslySetInnerHTML={{ __html: details?.description }}
                   />

@@ -127,7 +127,8 @@ const Header: React.FC = () => {
           </label>
           {showMenu && (
             <ul
-              className="absolute right-0 menuBar bg-primary shadow-md rounded-lg w-48 flex-col z-50"
+              className="absolute right-0 menuBar bg-primary shadow-md rounded-lg w-48 flex-col"
+              style={{ zIndex: "9999" }}
               id="menu"
             >
               <li>

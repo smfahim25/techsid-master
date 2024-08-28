@@ -112,7 +112,7 @@ const TutorialsPage = () => {
   return (
     <div>
       <Header />
-      <main className="min-h-screen">
+      <main className="md:min-h-screen">
         {loading ? (
           <div className="mt-20 inset-0 flex items-center justify-center absolute z-50 opacity-75">
             <div
@@ -121,15 +121,15 @@ const TutorialsPage = () => {
             ></div>
           </div>
         ) : (
-          <div className="flex min-h-screen">
+          <div className="flex md:min-h-screen">
             {/* Sidebar */}
             <aside className=" bg-gray-100 p-6 hideNav">
-              <h2 className="text-xl font-bold mb-4">
+              <h2 className="text-xl font-bold mb-4 text-white px-4 py-1 rounded-md bg-gray-700">
                 {details[0]?.category?.name}
               </h2>
               <ul>
                 {details?.map((tutorial, index) => (
-                  <li key={index} className="mb-2">
+                  <li key={index} className="mb-2 text-center">
                     <button
                       onClick={() => setSelectedTutorialIndex(index)}
                       className={`text-primary hover:underline ${
@@ -170,7 +170,10 @@ const TutorialsPage = () => {
                     className="absolute left-0 right-0 bg-white shadow-md rounded-lg w-48 flex-col p-3"
                     id="menu"
                   >
-                    {tutorials.map((tutorial, index) => (
+                    <li className="text-xl font-bold mb-4 text-white px-4 py-1 rounded-md bg-gray-700">
+                      {details[0]?.category?.name}
+                    </li>
+                    {details?.map((tutorial, index) => (
                       <li key={index} className="mb-2">
                         <button
                           onClick={() => setSelectedTutorialIndex(index)}
