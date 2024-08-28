@@ -31,8 +31,10 @@ const Page: React.FC = () => {
           throw new Error("Network response was not ok");
         }
         const result = await response.json();
-
-        setData(result?.data); // Adjust this according to your API response
+        const activeTutorials = result?.data.filter(
+          (tutorial: Course) => tutorial.status === "ACTIVE"
+        );
+        setData(activeTutorials); // Adjust this according to your API response
       } catch (error: any) {
         setError(error.message);
       } finally {
@@ -66,7 +68,7 @@ const Page: React.FC = () => {
                 {data?.map((tutorial: Course) => (
                   <TutorialsContent
                     key={tutorial.id}
-                    id={tutorial.id}
+                    id={tutorial.catId}
                     title={tutorial.title}
                     description={tutorial.description}
                     imageSrc={tutorial.img}

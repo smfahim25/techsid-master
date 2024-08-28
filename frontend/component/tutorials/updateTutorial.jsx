@@ -29,6 +29,11 @@ const UpdateTutorial = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    if (user?.data?.user?.role !== "ADMIN") {
+      router.push("/");
+    }
+  }, [user, router]);
   // Fetch categories for the dropdown
   useEffect(() => {
     const fetchCategories = async () => {
@@ -353,7 +358,7 @@ const UpdateTutorial = () => {
                 type="submit"
                 className="bg-primary text-white px-6 py-2 rounded-md"
               >
-                Update Tutorial
+                Save
               </button>
             </div>
           </form>
