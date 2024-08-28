@@ -78,6 +78,7 @@ const SocialSignUpJWT = async (payload) => {
     const result = await prisma.user.create({ data: data });
     // eslint-disable-next-line no-unused-vars
     const { password, ...user } = result;
+
     return { accessToken, user };
   }
 
