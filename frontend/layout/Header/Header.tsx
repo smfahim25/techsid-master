@@ -32,15 +32,18 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | FocusEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setShowMenu(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("focusin", handleClickOutside); // Add focusin listener
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("focusin", handleClickOutside); // Clean up focusin listener
     };
   }, []);
 
@@ -124,7 +127,7 @@ const Header: React.FC = () => {
           </label>
           {showMenu && (
             <ul
-              className="absolute right-0 menuBar bg-primary shadow-md rounded-lg w-48 flex-col"
+              className="absolute right-0 menuBar bg-primary shadow-md rounded-lg w-48 flex-col z-50"
               id="menu"
             >
               <li>

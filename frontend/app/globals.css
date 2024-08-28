@@ -69,3 +69,6 @@ h5 {
 }
 
 /* Add more for h3, h4, etc., if needed */
+.monaco-editor .iPadShowKeyboard {
+  display: none !important;
+}

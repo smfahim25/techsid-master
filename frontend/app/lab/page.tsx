@@ -85,7 +85,7 @@ const CodeLabPage: React.FC = () => {
               />
               <button
                 onClick={handleRunCode}
-                className="mt-2 px-4 py-2 mb-5 bg-blue-500 text-white rounded"
+                className="mt-2 px-4 py-2 mb-5 bg-primary text-white rounded"
               >
                 Run code
               </button>
