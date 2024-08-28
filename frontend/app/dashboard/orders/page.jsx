@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-const UserTable = () => {
+const UserTable = ({ searchQuery }) => {
   const user = useSelector((state) => state.auth.user);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -16,11 +16,10 @@ const UserTable = () => {
         const response = await fetch(
           "https://techsiid-master.onrender.com/api/v1//orders",
           {
-            method: "GET", // or 'POST', 'PUT', etc.
+            method: "GET",
             headers: {
-              "Content-Type": "application/json", // Ensure the content type is JSON
-              Authorization: `${user?.data.accessToken}`, // Add this if your API requires an authentication token
-              // Add any other headers your API might require
+              "Content-Type": "application/json",
+              Authorization: `${user?.data.accessToken}`,
             },
           }
         );
@@ -39,7 +38,7 @@ const UserTable = () => {
     };
 
     fetchData();
-  }, [user]); // Empty dependency array to run only once on mount
+  }, [user]);
 
   const handleStatusChange = async (orderId, newStatus) => {
     setLoading(true);
@@ -61,13 +60,12 @@ const UserTable = () => {
         throw new Error("Failed to update status");
       }
 
-      // Update the status in the local state
       setData((prevData) =>
         prevData.map((order) =>
           order.id === orderId ? { ...order, status: newStatus } : order
         )
       );
-      toast.success("Succesfully updated status");
+      toast.success("Successfully updated status");
       setLoading(false);
     } catch (error) {
       toast.error("Error updating status");
@@ -75,6 +73,13 @@ const UserTable = () => {
       setLoading(false);
     }
   };
+
+  const filteredData = data.filter(
+    (order) =>
+      order.user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.user.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (loading)
     return (
@@ -86,20 +91,19 @@ const UserTable = () => {
       </div>
     );
   if (error) return <p>Error: {error}</p>;
+
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
-
-    const options = {
+    return date.toLocaleString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
       second: "numeric",
-    };
-
-    return date.toLocaleString("en-US", options);
+    });
   };
+
   return (
     <table className="min-w-full leading-normal">
       <thead>
@@ -122,7 +126,7 @@ const UserTable = () => {
         </tr>
       </thead>
       <tbody>
-        {data.map((order) => (
+        {filteredData.map((order) => (
           <tr key={order.id}>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <div className="flex items-center">
@@ -155,9 +159,7 @@ const UserTable = () => {
                 {formatDate(order?.course.createAt)}
               </p>
             </td>
-            <td
-              className={`px-5 py-5 border-b border-gray-200 bg-white text-sm `}
-            >
+            <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <p
                 className={`text-gray-900 text-center px-2 py-1 rounded-lg whitespace-no-wrap ${
                   order?.status === "PAID" ? "bg-green-400" : "bg-red-400"
@@ -184,32 +186,38 @@ const UserTable = () => {
 };
 
 const Page = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <div className="container mx-auto max-w-3xl overflow-y-auto min-h-screen">
       <div className="py-8">
         <div className="flex flex-col md:flex-row mb-1 sm:mb-0 justify-between w-full">
           <h2 className="text-2xl leading-tight mb-5">Order Management</h2>
           <div className="text-end">
-            <form className="flex w-full max-w-sm space-x-3">
-              <div className="">
+            <form
+              className="flex w-full max-w-sm space-x-3"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <div>
                 <input
                   type="text"
-                  id='"form-subscribe-Filter'
                   className="md:px-4 py-2 rounded-md"
-                  placeholder="Search user"
+                  placeholder="Search user, course, email"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <button
                 className="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-primary rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 focus:ring-offset-purple-200"
                 type="submit"
               >
-                Add User
+                Search
               </button>
             </form>
           </div>
         </div>
         <div className="py-4 overflow-x-auto">
-          <UserTable />
+          <UserTable searchQuery={searchQuery} />
         </div>
       </div>
     </div>

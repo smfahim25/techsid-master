@@ -44,9 +44,11 @@ const CourseDetail = () => {
 
         setDetails(course);
         setLoading(false);
+        setFetchs(false);
       } catch (error) {
         console.log(error);
         setLoading(false);
+        setFetchs(false);
       }
     };
     if (courseId) {
@@ -86,9 +88,11 @@ const CourseDetail = () => {
         setLoading(false);
       }
     };
-
+    if (fetchs) {
+      fetchData();
+    }
     fetchData();
-  }, [user, courseId]);
+  }, [user, courseId, fetchs]);
 
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
@@ -126,7 +130,7 @@ const CourseDetail = () => {
         toast.success("Success order placed");
         setLoading(false);
         setShowModal(false);
-        setFetchs(false);
+        setFetchs(true);
         // window.location.reload();
       } catch (error) {
         toast.error(`An error occurred: ${error.message}`);
@@ -197,7 +201,11 @@ const CourseDetail = () => {
               </div>
             </div>
             <div className="flex items-center mt-5">
-              {status?.status !== "PAID" ? (
+              {status?.status === "PAID" ? (
+                <span className="bg-green-400 px-10 py-2 rounded-lg text-white">
+                  PAID
+                </span>
+              ) : (
                 <button
                   className="bg-primary px-10 py-2 text-white rounded-lg"
                   onClick={() => {
@@ -209,10 +217,6 @@ const CourseDetail = () => {
                 >
                   Buy course
                 </button>
-              ) : (
-                <span className="bg-green-400 px-10 py-2 rounded-lg text-white">
-                  PAID
-                </span>
               )}
             </div>
             <div className="relative flex justify-center items-center">

@@ -17,19 +17,17 @@ interface User {
     name: string;
     role: string;
     email: string;
-    accessToken: string; // Assuming the access token is part of the user data
-    // Add other user properties here
+    accessToken: string;
   };
 }
 
-// Define the RootState interface
 interface RootState {
   auth: {
     user: User | null;
   };
 }
 
-const UserTable: React.FC = () => {
+const UserTable: React.FC<{ searchTerm: string }> = ({ searchTerm }) => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [data, setData] = useState<userData[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,7 +42,7 @@ const UserTable: React.FC = () => {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `${user?.data.accessToken}`, // Assuming a Bearer token
+              Authorization: `${user?.data.accessToken}`,
             },
           }
         );
@@ -74,7 +72,7 @@ const UserTable: React.FC = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `${user?.data.accessToken}`, // Assuming a Bearer token
+            Authorization: `${user?.data.accessToken}`,
           },
           body: JSON.stringify({ role: newRole }),
         }
@@ -85,18 +83,14 @@ const UserTable: React.FC = () => {
         setLoading(false);
       }
 
-      // Optionally update the state to reflect the new role without refetching all data
-      // Assuming the API returns the updated user data
       const updatedUser = await response.json();
-
-      // Update the state with the new role
       setData((prevData) => {
-        if (!prevData) return null; // or [] if you want to return an empty array
+        if (!prevData) return null;
         return prevData.map((user) =>
           user.id === userId ? { ...user, role: newRole } : user
         );
       });
-      toast.success("user role updated successfully");
+      toast.success("User role updated successfully");
       setLoading(false);
     } catch (error: any) {
       setError(error.message);
@@ -104,6 +98,12 @@ const UserTable: React.FC = () => {
       setLoading(false);
     }
   };
+
+  const filteredData = data?.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.role.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loading)
     return (
@@ -133,7 +133,7 @@ const UserTable: React.FC = () => {
         </tr>
       </thead>
       <tbody>
-        {data?.map((user) => (
+        {filteredData?.map((user) => (
           <tr key={user.id}>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <div className="flex items-center">
@@ -179,6 +179,8 @@ const UserTable: React.FC = () => {
 };
 
 const UserManagementPage: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
   return (
     <div className="container mx-auto max-w-3xl overflow-y-auto min-h-screen">
       <div className="py-8">
@@ -189,16 +191,18 @@ const UserManagementPage: React.FC = () => {
               <div className="">
                 <input
                   type="text"
-                  id='"form-subscribe-Filter'
+                  id="form-subscribe-Filter"
                   className="md:px-4 py-2 rounded-md"
                   placeholder="Search user"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
             </form>
           </div>
         </div>
         <div className="py-4 overflow-x-auto">
-          <UserTable />
+          <UserTable searchTerm={searchTerm} />
         </div>
       </div>
     </div>

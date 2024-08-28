@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+
 type category = {
   name: string;
 };
@@ -25,8 +26,8 @@ interface RootState {
   };
 }
 
-const ContentTable: React.FC = () => {
-  const [data, setData] = useState<any>(null);
+const ContentTable: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
+  const [data, setData] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -42,7 +43,6 @@ const ContentTable: React.FC = () => {
           throw new Error("Network response was not ok");
         }
         const result = await response.json();
-        console.log(result);
         setData(result?.data); // Adjust this according to your API response
       } catch (error: any) {
         setError(error.message);
@@ -92,6 +92,14 @@ const ContentTable: React.FC = () => {
       toast.error("Error updating tutorial");
     }
   };
+
+  // Filter the data by title or category name based on the search query
+  const filteredData = data.filter(
+    (item) =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.category?.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading)
     return (
       <div className="mt-20 inset-0 flex items-center justify-center absolute z-50 opacity-75">
@@ -147,7 +155,7 @@ const ContentTable: React.FC = () => {
         </tr>
       </thead>
       <tbody>
-        {data.map((item: ContentItem) => (
+        {filteredData.map((item: ContentItem) => (
           <tr key={item.id}>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               {item.title}
@@ -185,6 +193,8 @@ const ContentTable: React.FC = () => {
 };
 
 const ContentManagementPage: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <div className="container mx-auto max-w-3xl overflow-y-auto min-h-screen">
       <div className="py-8">
@@ -195,13 +205,18 @@ const ContentManagementPage: React.FC = () => {
             </h2>
           </div>
           <div className="text-end">
-            <form className="flex w-full max-w-sm space-x-3">
+            <form
+              className="flex w-full max-w-sm space-x-3"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <div className="">
                 <input
                   type="text"
                   id='"form-subscribe-Filter'
                   className="md:px-4 py-2 rounded-md"
                   placeholder="Search Course"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <Link href="/tutorials/createTu">
@@ -216,7 +231,7 @@ const ContentManagementPage: React.FC = () => {
           </div>
         </div>
         <div className="py-4 overflow-x-auto">
-          <ContentTable />
+          <ContentTable searchQuery={searchQuery} />
         </div>
       </div>
     </div>

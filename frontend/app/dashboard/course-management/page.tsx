@@ -22,7 +22,7 @@ interface RootState {
   };
 }
 
-const CourseTable: React.FC = () => {
+const CourseTable: React.FC<{ searchQuery: string }> = ({ searchQuery }) => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,6 +54,14 @@ const CourseTable: React.FC = () => {
     }
     fetchData();
   }, [fetchs]);
+
+  const filteredData = data?.filter(
+    (course: Course) =>
+      course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.instructor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      course.fees.toString().includes(searchQuery)
+  );
+
   const hanldeDelete = async (id: string) => {
     setShowModal(false);
     setLoading(true);
@@ -122,8 +130,9 @@ const CourseTable: React.FC = () => {
         </div>
       </div>
     );
+
   return (
-    <table className=" leading-normal">
+    <table className="leading-normal">
       <thead>
         <tr>
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
@@ -144,7 +153,7 @@ const CourseTable: React.FC = () => {
         </tr>
       </thead>
       <tbody>
-        {data.map((course: Course) => (
+        {filteredData.map((course: Course) => (
           <tr key={course.id}>
             <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
               <div className="flex items-center">
@@ -196,6 +205,8 @@ const CourseTable: React.FC = () => {
 };
 
 const CourseManagementPage: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
   return (
     <div className="container mx-auto max-w-3xl min-h-screen">
       <div className="py-8">
@@ -206,13 +217,18 @@ const CourseManagementPage: React.FC = () => {
             </h2>
           </div>
           <div className="text-end">
-            <form className="flex w-full max-w-sm space-x-3">
+            <form
+              className="flex w-full max-w-sm space-x-3"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <div className="">
                 <input
                   type="text"
-                  id='"form-subscribe-Filter'
+                  id="form-subscribe-Filter"
                   className="md:px-4 py-2 rounded-md"
                   placeholder="Search Course"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               <Link href="/courses/create">
@@ -227,7 +243,7 @@ const CourseManagementPage: React.FC = () => {
           </div>
         </div>
         <div className="py-4 overflow-x-auto">
-          <CourseTable />
+          <CourseTable searchQuery={searchQuery} />
         </div>
       </div>
     </div>
