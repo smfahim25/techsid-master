@@ -67,7 +67,7 @@ const EditCourse = () => {
           duration: course.duration,
           level: course.level,
           instructor: course.instructor,
-          img: null,
+          img: course?.img,
           rating: course.rating,
           fees: course.fees,
           language: course.language,
@@ -374,7 +374,6 @@ const EditCourse = () => {
                     name="img"
                     id="img"
                     onChange={handleChange}
-                    required
                     className="mt-1 block w-full border bg-white border-gray-300 rounded-md shadow-sm py-3 px-2"
                   />
                 </div>
@@ -450,7 +449,7 @@ const EditCourse = () => {
                 </div>
               </div>
               <div
-                className="flex flex-col md:flex-row mt-5"
+                className="grid grid-cols-1 md:grid-cols-2 mt-5"
                 style={{ gap: "1.5rem" }}
               >
                 <div>
@@ -579,7 +578,7 @@ const EditCourse = () => {
                   type="submit"
                   className="bg-primary text-white px-10 py-5 rounded-md"
                 >
-                  Create course
+                  Save
                 </button>
               </div>
             </form>

@@ -107,7 +107,10 @@ const CoursesSection: React.FC = () => {
           throw new Error("Network response was not ok");
         }
         const result = await response.json();
-        setData(result?.data);
+        const activeCourse = result?.data.filter(
+          (course: Course) => course.status === "ACTIVE"
+        );
+        setData(activeCourse);
       } catch (error: any) {
         setError(error.message);
       } finally {

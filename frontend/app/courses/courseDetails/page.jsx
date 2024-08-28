@@ -19,6 +19,8 @@ const CourseDetail = () => {
   const [details, setDetails] = useState("");
   const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [fetchs, setFetchs] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,7 +52,10 @@ const CourseDetail = () => {
     if (courseId) {
       fetchCourseDetails();
     }
-  }, [courseId]);
+    if (courseId && fetchs) {
+      fetchCourseDetails();
+    }
+  }, [courseId, fetchs]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -120,7 +125,9 @@ const CourseDetail = () => {
         console.log("Response data:", result);
         toast.success("Success order placed");
         setLoading(false);
-        window.location.reload();
+        setShowModal(false);
+        setFetchs(false);
+        // window.location.reload();
       } catch (error) {
         toast.error(`An error occurred: ${error.message}`);
         setLoading(false);
@@ -193,7 +200,7 @@ const CourseDetail = () => {
               {status.status !== "PAID" ? (
                 <button
                   className="bg-primary px-10 py-2 text-white rounded-lg"
-                  onClick={handleBuy}
+                  onClick={() => setShowModal(true)}
                 >
                   Buy course
                 </button>
@@ -201,6 +208,62 @@ const CourseDetail = () => {
                 <span className="bg-green-400 px-10 py-2 rounded-lg text-white">
                   PAID
                 </span>
+              )}
+            </div>
+            <div className="relative flex justify-center items-center">
+              {showModal && (
+                <div className="absolute z-50 flex flex-col max-w-md gap-2 p-6 rounded-md shadow-md bg-white text-black h-[350px] w-[500px]">
+                  <h2 className="text-xl text-center font-semibold leading-tight tracking-wide">
+                    Order confirmation
+                  </h2>
+                  <div className="mt-10">
+                    <p className=" text-black text-lg">
+                      Customer name:{" "}
+                      <span className="text-lg font-bold">
+                        {user?.data?.user?.name}
+                      </span>
+                    </p>
+                    <p className=" text-black text-lg">
+                      Customer email:{" "}
+                      <span className="text-lg font-bold">
+                        {user?.data?.user?.email}
+                      </span>
+                    </p>
+                    <p className=" text-black text-lg">
+                      Course name:{" "}
+                      <span className="text-lg font-bold">
+                        {details?.title}
+                      </span>
+                    </p>
+                    <p className=" text-black text-lg">
+                      Course price:{" "}
+                      <span className="text-lg font-bold">
+                        ${details?.fees}
+                      </span>
+                    </p>
+                    <p className=" text-black text-lg">
+                      Course duration:{" "}
+                      <span className="text-lg font-bold">
+                        {details?.duration}
+                      </span>
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col justify-center gap-3 mt-6 sm:flex-row">
+                    <button
+                      className="px-6 py-2 rounded-sm"
+                      onClick={() => setShowModal(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="px-6 py-2 rounded-md shadow-sm bg-primary text-white"
+                      onClick={handleBuy}
+                    >
+                      Pay
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
             <div className="mt-10">

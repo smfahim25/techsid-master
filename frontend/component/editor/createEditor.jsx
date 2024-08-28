@@ -412,7 +412,7 @@ export default function CreateEditor() {
               </div>
             </div>
             <div
-              className="flex flex-col md:flex-row mt-5"
+              className="grid grid-cols-1 md:grid-cols-2 mt-5"
               style={{ gap: "1.5rem" }}
             >
               <div>

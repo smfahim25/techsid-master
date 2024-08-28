@@ -358,7 +358,7 @@ const UpdateTutorial = () => {
                 type="submit"
                 className="bg-primary text-white px-6 py-2 rounded-md"
               >
-                Update Tutorial
+                Save
               </button>
             </div>
           </form>
