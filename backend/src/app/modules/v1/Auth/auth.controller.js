@@ -25,12 +25,12 @@ const Login = catchAsync(async (req, res) => {
 
 const SocialSignUpJWT = catchAsync(async (req, res) => {
   const result = await AuthService.SocialSignUpJWT(req.body);
-  const { accessToken, getUser } = result;
+  const { accessToken, user } = result;
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User SignUp Successfully!',
-    data: { accessToken, getUser },
+    data: { accessToken, user },
   });
 });
 

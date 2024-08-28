@@ -49,11 +49,11 @@ const Login = async (payload) => {
 };
 
 const SocialSignUpJWT = async (payload) => {
-  const getUser = await prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { email: payload.email },
   });
 
-  if (!getUser) {
+  if (!user) {
     const jwtPayload = {
       email: payload.email,
       role: 'USER',
@@ -77,13 +77,14 @@ const SocialSignUpJWT = async (payload) => {
 
     const result = await prisma.user.create({ data: data });
     // eslint-disable-next-line no-unused-vars
-    const { password, ...getUser } = result;
-    return { accessToken, getUser };
+    const { password, ...user } = result;
+
+    return { accessToken, user };
   }
 
   const jwtPayload = {
-    email: getUser?.email,
-    role: getUser.role,
+    email: user?.email,
+    role: user.role,
   };
 
   const accessToken = createToken(
@@ -93,7 +94,7 @@ const SocialSignUpJWT = async (payload) => {
   );
 
   // const { password, ...rest } = result;
-  return { accessToken, getUser };
+  return { accessToken, user };
 };
 
 export const AuthService = {
