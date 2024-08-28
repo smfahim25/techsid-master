@@ -1,4 +1,3 @@
-// pages/tutorials.tsx
 "use client";
 
 import { API_BASE_URI } from "@/data/apiservice";
@@ -8,45 +7,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-
-const tutorials = [
-  {
-    title: "Introduction",
-    introduction: "This is something we still need to work on for a while.",
-    content: "Introduction content...",
-    subtopics: ["What is JavaScript?", "History of JavaScript", "Examples"],
-    example: 'console.log("Hello, JavaScript!");',
-    videoSrc: "https://www.youtube.com/embed/your-video-id", // Replace with your video URL
-    exerciseLink: "https://example.com/exercise-introduction", // Replace with your exercise URL
-  },
-  {
-    title: "Getting Started",
-    introduction: "Let's get started with JavaScript basics.",
-    content: "Getting started content...",
-    subtopics: [
-      "Installing Node.js",
-      "Setting up the environment",
-      "Your first script",
-    ],
-    example: 'const greeting = "Hello, World!";\nconsole.log(greeting);',
-    videoSrc: "https://www.youtube.com/embed/your-video-id", // Replace with your video URL
-    exerciseLink: "https://example.com/exercise-getting-started", // Replace with your exercise URL
-  },
-  {
-    title: "Installation steps",
-    introduction: "Let's get started with JavaScript basics.",
-    content: "Getting started content...",
-    subtopics: [
-      "Installing Node.js",
-      "Setting up the environment",
-      "Your first script",
-    ],
-    example: 'const greeting = "Hello, World!";\nconsole.log(greeting);',
-    videoSrc: "https://www.youtube.com/embed/your-video-id", // Replace with your video URL
-    exerciseLink: "https://example.com/exercise-getting-started", // Replace with your exercise URL
-  },
-  // Add more tutorial sections as needed
-];
 
 const TutorialsPage = () => {
   const params = useSearchParams();
@@ -124,7 +84,7 @@ const TutorialsPage = () => {
           <div className="flex md:min-h-screen">
             {/* Sidebar */}
             <aside className=" bg-gray-100 p-6 hideNav">
-              <h2 className="text-xl font-bold mb-4 text-white px-4 py-1 rounded-md bg-gray-700">
+              <h2 className="text-xl font-bold mb-4 text-black px-4 py-1 rounded-md ">
                 {details[0]?.category?.name}
               </h2>
               <ul>
@@ -170,7 +130,7 @@ const TutorialsPage = () => {
                     className="absolute left-0 right-0 bg-white shadow-md rounded-lg w-48 flex-col p-3"
                     id="menu"
                   >
-                    <li className="text-xl font-bold mb-4 text-white px-4 py-1 rounded-md bg-gray-700">
+                    <li className="text-xl font-bold mb-4 text-black px-4 py-1 rounded-md">
                       {details[0]?.category?.name}
                     </li>
                     {details?.map((tutorial, index) => (
