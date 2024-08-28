@@ -15,7 +15,7 @@ import authReducer from "./auth/slice";
 
 // Configure persistReducer
 const persistConfig = {
-  key: "root",
+  key: "techsid",
   storage,
 };
 

@@ -89,7 +89,7 @@ const CourseDetail = () => {
 
     fetchData();
   }, [user, courseId]);
-
+  console.log(user);
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
 
@@ -212,7 +212,7 @@ const CourseDetail = () => {
             </div>
             <div className="relative flex justify-center items-center">
               {showModal && (
-                <div className="absolute z-50 flex flex-col max-w-md gap-2 p-6 rounded-md shadow-md bg-white text-black h-[350px] w-[500px]">
+                <div className="absolute z-50 flex flex-col max-w-md gap-2 p-6 rounded-md shadow-md bg-white text-black h-[400px] md:h-[350px] w-[370px] md:w-[500px]">
                   <h2 className="text-xl text-center font-semibold leading-tight tracking-wide">
                     Order confirmation
                   </h2>
@@ -224,7 +224,7 @@ const CourseDetail = () => {
                       </span>
                     </p>
                     <p className=" text-black text-lg">
-                      Customer email:{" "}
+                      email:{" "}
                       <span className="text-lg font-bold">
                         {user?.data?.user?.email}
                       </span>
@@ -269,9 +269,6 @@ const CourseDetail = () => {
             <div className="mt-10">
               <div className=" text-primary p-6 shadow-md">
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div
-                    dangerouslySetInnerHTML={{ __html: details?.description }}
-                  />
                   <div
                     dangerouslySetInnerHTML={{ __html: details?.description }}
                   />

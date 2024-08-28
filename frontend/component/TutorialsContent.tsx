@@ -5,9 +5,8 @@ import React from "react";
 const TutorialsContent: React.FC<{
   id: string;
   title: string;
-  description: string;
   imageSrc: string;
-}> = ({ title, description, imageSrc, id }) => {
+}> = ({ title, imageSrc, id }) => {
   return (
     <div className="bg-white shadow-lg rounded overflow-hidden group p-3">
       <div className="flex justify-center items-center">
@@ -22,7 +21,6 @@ const TutorialsContent: React.FC<{
       </div>
       <div className="p-4">
         <h3 className="font-bold text-lg mb-2">{title}</h3>
-        <p className="text-gray-700 text-sm mb-4">{description.slice(0, 50)}</p>
         <div className="flex justify-between items-center">
           <Link href={`tutorials/tutorialsDetails?id=${id}`}>
             <button className="text-white bg-primary px-5 py-2 text-xs rounded hover:bg-purple-700 transition duration-300">
