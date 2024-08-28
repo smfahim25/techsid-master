@@ -194,12 +194,6 @@ const UserManagementPage: React.FC = () => {
                   placeholder="Search user"
                 />
               </div>
-              <button
-                className="flex-shrink-0 px-4 py-2 text-base font-semibold text-white bg-primary rounded-lg shadow-md hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 focus:ring-offset-purple-200"
-                type="submit"
-              >
-                Add User
-              </button>
             </form>
           </div>
         </div>
