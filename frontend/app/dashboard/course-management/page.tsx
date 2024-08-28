@@ -1,19 +1,35 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { API_BASE_URI } from "@/data/apiservice";
 
 type Course = {
-  id: number;
+  id: string;
   title: string;
   instructor: string;
   fees: number;
   status: string;
 };
+interface RootState {
+  auth: {
+    user: {
+      data: {
+        accessToken: string;
+      };
+    };
+  };
+}
 
 const CourseTable: React.FC = () => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [fetchs, setFetchs] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
+  const user = useSelector((state: RootState) => state.auth.user);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,11 +46,50 @@ const CourseTable: React.FC = () => {
         setError(error.message);
       } finally {
         setLoading(false);
+        setFetchs(false);
       }
     };
-
+    if (fetchs) {
+      fetchData();
+    }
     fetchData();
-  }, []);
+  }, [fetchs]);
+  const hanldeDelete = async (id: string) => {
+    setShowModal(false);
+    setLoading(true);
+    const payload = {
+      delete: true,
+    };
+    const mainForm = new FormData();
+    mainForm.append("data", JSON.stringify(payload));
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URI}/courses/edit-course/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `${user?.data?.accessToken}`,
+          },
+          body: mainForm,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update tutorial");
+      }
+
+      const data = await response.json();
+      toast.success("Course Deleted successfully");
+      setLoading(false);
+      setShowModal(false);
+      // window.location.reload();
+      setFetchs(true);
+    } catch (error) {
+      toast.error("Error updating course");
+    }
+  };
+
   if (loading)
     return (
       <div className="mt-20 inset-0 flex items-center justify-center absolute z-50 opacity-75">
@@ -45,6 +100,28 @@ const CourseTable: React.FC = () => {
       </div>
     );
   if (error) return <p>Error: {error}</p>;
+  if (showModal)
+    return (
+      <div className="flex flex-col max-w-md gap-2 p-6 rounded-md shadow-md bg-white-900 text-black">
+        <p className="flex-1 text-black">
+          Are you sure, you want to delete content?
+        </p>
+        <div className="flex flex-col justify-end gap-3 mt-6 sm:flex-row">
+          <button
+            className="px-6 py-2 rounded-sm"
+            onClick={() => setShowModal(false)}
+          >
+            No
+          </button>
+          <button
+            className="px-6 py-2 rounded-sm shadow-sm bg-red-600 text-white"
+            onClick={() => hanldeDelete(deleteId)}
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    );
   return (
     <table className=" leading-normal">
       <thead>
@@ -101,7 +178,13 @@ const CourseTable: React.FC = () => {
                   Edit
                 </button>
               </Link>
-              <button className="text-red-600 hover:text-red-900 ml-3">
+              <button
+                className="text-red-600 hover:text-red-900 ml-3"
+                onClick={() => {
+                  setDeleteId(course?.id);
+                  setShowModal(true);
+                }}
+              >
                 Delete
               </button>
             </td>

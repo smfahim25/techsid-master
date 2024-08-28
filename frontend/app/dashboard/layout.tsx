@@ -43,7 +43,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
       } else {
         router.push("/");
       }
-    } else {
+    }
+    if (!user) {
       router.push("/login");
     }
   }, [user, router]);

@@ -29,6 +29,11 @@ const UpdateTutorial = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    if (user?.data?.user?.role !== "ADMIN") {
+      router.push("/");
+    }
+  }, [user, router]);
   // Fetch categories for the dropdown
   useEffect(() => {
     const fetchCategories = async () => {

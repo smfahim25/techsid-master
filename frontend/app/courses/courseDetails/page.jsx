@@ -17,8 +17,10 @@ const CourseDetail = () => {
   const params = useSearchParams();
   const courseId = params?.get("id");
   const [details, setDetails] = useState("");
+  const [status, setStatus] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
   useEffect(() => {
     const fetchCourseDetails = async () => {
       setLoading(true);
@@ -49,6 +51,39 @@ const CourseDetail = () => {
       fetchCourseDetails();
     }
   }, [courseId]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `${API_BASE_URI}/orders/${user?.data?.user?.id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `${user?.data?.accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const result = await response.json();
+        // console.log(result.data);
+        const checkStatus = result?.data.filter(
+          (course) => course.courseId === courseId
+        );
+        // console.log(checkStatus);
+        setStatus(checkStatus[0]);
+      } catch (error) {
+        console.log(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [user, courseId]);
 
   const formatDate = (isoDateString) => {
     const date = new Date(isoDateString);
@@ -85,8 +120,9 @@ const CourseDetail = () => {
         console.log("Response data:", result);
         toast.success("Success order placed");
         setLoading(false);
+        window.location.reload();
       } catch (error) {
-        toast.error("An error occurred");
+        toast.error(`An error occurred: ${error.message}`);
         setLoading(false);
       }
     }
@@ -110,9 +146,7 @@ const CourseDetail = () => {
               <div className="w-full  md:pr-6">
                 <h1 className="text-4xl font-bold mb-2">{details?.title}</h1>
                 <div className="text-lg text-gray-700 mb-4">
-                  <div
-                    dangerouslySetInnerHTML={{ __html: details?.description }}
-                  />
+                  {details?.titleDescription}
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                   <span className="bg-primary text-white text-center text-sm font-semibold px-2 py-2 rounded-full">
@@ -140,12 +174,6 @@ const CourseDetail = () => {
                   <span className="secondary ml-4 flex flex-col">
                     {details?.level}
                   </span>
-                  <button
-                    className="bg-primary px-3 py-2 text-white rounded-lg"
-                    onClick={handleBuy}
-                  >
-                    Buy course
-                  </button>
                 </div>
               </div>
 
@@ -161,7 +189,32 @@ const CourseDetail = () => {
                 />
               </div>
             </div>
-            <LearningOutcomes />
+            <div className="flex items-center mt-5">
+              {status.status !== "PAID" ? (
+                <button
+                  className="bg-primary px-10 py-2 text-white rounded-lg"
+                  onClick={handleBuy}
+                >
+                  Buy course
+                </button>
+              ) : (
+                <span className="bg-green-400 px-10 py-2 rounded-lg text-white">
+                  PAID
+                </span>
+              )}
+            </div>
+            <div className="mt-10">
+              <div className=" text-primary p-6 shadow-md">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div
+                    dangerouslySetInnerHTML={{ __html: details?.description }}
+                  />
+                  <div
+                    dangerouslySetInnerHTML={{ __html: details?.description }}
+                  />
+                </div>
+              </div>
+            </div>
             <div className=" p-6 shadow-md">
               <h2 className="text-xl font-bold mb-4">Course content</h2>
               <div className="text-sm">

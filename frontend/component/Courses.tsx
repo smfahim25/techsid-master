@@ -89,6 +89,7 @@ interface Course {
   status: "ACTIVE" | "INACTIVE"; // Enum-like string literals for status
   createAt: string; // ISO 8601 date string
   updatedAt: string; // ISO 8601 date string
+  titleDescription: string;
 }
 
 const CoursesSection: React.FC = () => {
@@ -133,13 +134,13 @@ const CoursesSection: React.FC = () => {
             <h2 className="text-3xl font-bold mb-6 text-gray-800">
               Discover the Variety of Courses Here
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
               {data?.map((course: Course) => (
                 <ContentCard
                   key={course.id}
                   id={course.id}
                   title={course.title}
-                  description={course.description}
+                  description={course.titleDescription}
                   rating={course.rating}
                   reviewCount={course.rating}
                   imageSrc={course.img}

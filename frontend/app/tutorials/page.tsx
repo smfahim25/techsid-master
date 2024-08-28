@@ -66,7 +66,7 @@ const Page: React.FC = () => {
                 {data?.map((tutorial: Course) => (
                   <TutorialsContent
                     key={tutorial.id}
-                    id={tutorial.id}
+                    id={tutorial.catId}
                     title={tutorial.title}
                     description={tutorial.description}
                     imageSrc={tutorial.img}
