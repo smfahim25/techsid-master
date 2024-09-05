@@ -5,7 +5,6 @@ import { signOut } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useDispatch, useSelector } from "react-redux";
 
 interface User {
@@ -25,10 +24,13 @@ const Header: React.FC = () => {
   const dispatch = useDispatch();
 
   const [showMenu, setShowMenu] = useState(false);
+  const [showAvatarMenu, setShowAvatarMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const avatarMenuRef = useRef<HTMLDivElement>(null);
 
   const closeMenu = () => {
     setShowMenu(false);
+    setShowAvatarMenu(false); // Also close avatar menu when any menu is closed
   };
 
   useEffect(() => {
@@ -36,14 +38,20 @@ const Header: React.FC = () => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setShowMenu(false);
       }
+      if (
+        avatarMenuRef.current &&
+        !avatarMenuRef.current.contains(event.target as Node)
+      ) {
+        setShowAvatarMenu(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("focusin", handleClickOutside); // Add focusin listener
+    document.addEventListener("focusin", handleClickOutside);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("focusin", handleClickOutside); // Clean up focusin listener
+      document.removeEventListener("focusin", handleClickOutside);
     };
   }, []);
 
@@ -82,7 +90,50 @@ const Header: React.FC = () => {
             Blogs
           </Link>
         </nav>
-        {!normal ? (
+        {normal ? (
+          <div
+            className="hideNav md:flex space-x-4 relative"
+            ref={avatarMenuRef}
+          >
+            <button
+              onClick={() => setShowAvatarMenu(!showAvatarMenu)}
+              className="flex items-center space-x-2 focus:outline-none"
+            >
+              <Image
+                src="/avatar.jpg"
+                alt="User"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+            </button>
+
+            {showAvatarMenu && (
+              <div
+                className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg"
+                style={{ zIndex: "9999" }}
+              >
+                <Link
+                  href="/profile"
+                  className="block px-4 py-2 hover:bg-gray-200"
+                  onClick={closeMenu}
+                >
+                  Profile
+                </Link>
+                <button
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-200"
+                  onClick={() => {
+                    dispatch(logout());
+                    signOut(auth);
+                    closeMenu();
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
           <div className="hideNav md:flex space-x-4">
             <Link href="/login" passHref>
               <button className="px-4 py-2 rounded">Login</button>
@@ -90,18 +141,6 @@ const Header: React.FC = () => {
             <Link href="/signup" passHref>
               <button className="px-4 py-2 rounded">Sign up</button>
             </Link>
-          </div>
-        ) : (
-          <div className="hideNav md:flex space-x-4">
-            <button
-              className="px-4 py-2 rounded"
-              onClick={() => {
-                dispatch(logout());
-                signOut(auth);
-              }}
-            >
-              Logout
-            </button>
           </div>
         )}
         <div className="relative hideIcon" ref={menuRef}>
@@ -224,6 +263,18 @@ const Header: React.FC = () => {
                     onClick={closeMenu}
                   >
                     <button className="">Sign up</button>
+                  </Link>
+                </li>
+              )}
+              {normal && (
+                <li>
+                  <Link
+                    href="/profile"
+                    passHref
+                    className="block px-4 py-2"
+                    onClick={closeMenu}
+                  >
+                    <button className="">Profile</button>
                   </Link>
                 </li>
               )}
